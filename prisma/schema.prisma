@@ -11,40 +11,40 @@ datasource db {
 }
 
 model Versao {
-  idVersao       String         @id @default(uuid())
-  nome         String
-  descricao    String
-  data        DateTime
-  arquivo         String
+  idVersao  String   @id @default(uuid())
+  nome      String
+  descricao String
+  data      DateTime @default(now())
+  arquivo   String
 }
 
 model Imagem {
-  idImagem          String   @id @default(uuid())
-  personagemIdPersonagem String
-  itemIdItem String
-  imagem String
-
-  personagem Personagem @relation(fields: [personagemIdPersonagem], references: [idPersonagem])
-  item Item @relation(fields: [itemIdItem], references: [idItem])
+  idImagem   String       @id @default(uuid())
+  imagem     String
+  personagem Personagem[]
+  item       Item[]
 }
 
 model Personagem {
-  idPersonagem    String @id @default(uuid())
-  nome String
+  idPersonagem   String @id @default(uuid())
+  imagemIdImagem String
+  nome           String
   descricao      String
-  Imagem      Imagem[]
+
+  imagem Imagem @relation(fields: [imagemIdImagem], references: [idImagem])
 }
 
 model Item {
-  idItem String   @id @default(uuid())
-  nome     String
-  descricao       String
-  
-  Imagem Imagem[]
+  idItem         String @id @default(uuid())
+  imagemIdImagem String
+  nome           String
+  descricao      String
+
+  imagem Imagem @relation(fields: [imagemIdImagem], references: [idImagem])
 }
 
 model Feedback {
   idFeedback String @id @default(uuid())
   atribuicao String
-  feedback String
+  feedback   String
 }

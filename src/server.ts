@@ -13,21 +13,17 @@ const prisma = new PrismaClient({
 });
 
 // Rota para cadastro de uma nova versão
-app.post("/Versao", async (request, response) => {
+app.post("/versao", async (request, response) => {
   const {
-    idVersao,
     nome,
     descricao,
-    data,
     arquivo
   } = VersaoSchema.parse(request.body);
 
   const versao = await prisma.versao.create({
     data: {
-      idVersao: idVersao,
       nome: nome,
       descricao: descricao,
-      data: data,
       arquivo: arquivo
     }
   });
@@ -36,16 +32,14 @@ app.post("/Versao", async (request, response) => {
 });
 
 // Rota para cadastro de um feedback
-app.post("/Feedback", async (request, response) => {
+app.post("/feedback", async (request, response) => {
   const {
-    idFeedback,
     atribuicao,
     feedback,
   } = FeedbackSchema.parse(request.body);
 
   const feedbacks = await prisma.feedback.create({
     data: {
-      idFeedback: idFeedback,
       atribuicao: atribuicao,
       feedback: feedback
     }
@@ -55,22 +49,18 @@ app.post("/Feedback", async (request, response) => {
 });
 
 // Rota para inserção de Imagem
-app.post("/Imagem", async (request, response) => {
+app.post("/imagem", async (request, response) => {
   const {
-    idImagem,
-    personagemIdPersonagem,
-    itemIdItem,
-    Imagem
+    imagem
   } = ImagemSchema.parse(request.body);
 
   const imagens = await prisma.imagem.create({
     data: {
-      idImagem: idImagem,
-      personagemIdPersonagem: personagemIdPersonagem,
-      itemIdItem: itemIdItem,
-      imagem: Imagem
+      imagem: imagem
     }
   });
 
   return response.status(201).json(imagens);
 });
+
+app.listen(3333)
