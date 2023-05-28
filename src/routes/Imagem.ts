@@ -33,4 +33,27 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
     return response.json(imagem);
   })
+// Rota para pegar todas as Imagens
+  app.get("/imagem/", async (request, response) => {
+    const imagem = await prisma.imagem.findMany({
+      select: {
+        imagem: true
+      }
+    });
+
+    return response.json(imagem);
+  });
+
+  // Rota para deletar imagem
+  app.delete("/imagem/:id", async (request, response) => {
+    const idImagem = request.params.id;
+
+    const imagem = await prisma.imagem.delete({
+      where: {
+        idImagem: idImagem
+      }
+    })
+
+    return response.json(imagem);
+  });
 }
