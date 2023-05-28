@@ -33,6 +33,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
     return response.json(imagem);
   })
+
 // Rota para pegar todas as Imagens
   app.get("/imagem/", async (request, response) => {
     const imagem = await prisma.imagem.findMany({

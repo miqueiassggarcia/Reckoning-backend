@@ -64,7 +64,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
   });
 
   // Rota para atualizar imagem
-  app.put("/item/:id", async (request, response) => {
+  app.put("/feedback/:id", async (request, response) => {
     const { atribuicao, feedback } = FeedbackSchema.partial().parse(request.body);
 
     if(atribuicao || feedback) {

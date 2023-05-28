@@ -4,7 +4,7 @@ import { PersonagemSchema } from "../validation/Personagem";
 
 module.exports = (app: Express, prisma: PrismaClient) => {
   // Rota para inserção de personagens
-  app.post("/personagens", async (request, response) => {
+  app.post("/personagem", async (request, response) => {
     const {
       imagemIdImagem,
       nome,
@@ -23,7 +23,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
   })
 
   // Rota para pegar personagem
-  app.get("/personagens/:id", async (request, response) => {
+  app.get("/personagem/:id", async (request, response) => {
     const idPersonagens = request.params.id;
 
     const personagem = await prisma.personagem.findUniqueOrThrow({
@@ -41,7 +41,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
   })
 
   // Rota para pegar todos os personagens
-  app.get("/personagens/", async (request, response) => {
+  app.get("/personagem/", async (request, response) => {
     const personagens = await prisma.personagem.findMany({
       select: {
         imagemIdImagem: true,
@@ -67,7 +67,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
   });
 
   // Rota para atualizar imagem
-  app.put("/item/:id", async (request, response) => {
+  app.put("/personagem/:id", async (request, response) => {
     const { descricao, imagemIdImagem, nome } = PersonagemSchema.partial().parse(request.body);
 
     if(descricao || imagemIdImagem || nome) {
