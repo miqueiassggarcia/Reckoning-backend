@@ -40,4 +40,31 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
     return response.json(versao);
   })
+  
+  // Rota para pegar todas as versões(acho que nem precisa)
+  app.get("/versao/", async (request, response) => {
+    const versao = await prisma.versao.findMany({
+      select: {
+        nome: true,
+        descricao:true,
+        data: true,
+        arquivo: true
+      }
+    });
+
+    return response.json(versao);
+  });
+
+  // Rota para deletar versao
+  app.delete("/versao/:id", async (request, response) => {
+    const idVersao = request.params.id;
+
+    const versao = await prisma.versao.delete({
+      where: {
+        idVersao: idVersao
+      }
+    })
+
+    return response.json(versao);
+  });
 }
