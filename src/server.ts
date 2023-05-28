@@ -1,13 +1,7 @@
-import express, { request, response } from "express";
+import express from "express";
 import { PrismaClient } from "@prisma/client"
 
-import { VersaoSchema } from "./validation/Versao";
-import { FeedbackSchema } from "./validation/Feedback";
-import { ImagemSchema } from "./validation/Imagem";
-import { ItensSchema } from "./validation/Itens";
-import { PersonagemSchema } from "./validation/Personagem";
-
-const app = express();
+export const app = express();
 app.use(express.json());
 
 const prisma = new PrismaClient({
@@ -20,4 +14,4 @@ require("./routes/Imagem")(app, prisma)
 require("./routes/Item")(app, prisma)
 require("./routes/Personagem")(app, prisma)
 
-app.listen(3333)
+export const server = app.listen(3333)

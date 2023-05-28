@@ -47,7 +47,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       }
     });
 
-    return response.json(feedbacks);
+    return response.status(200).json(feedbacks);
   });
 
   // Rota para deletar feedback
