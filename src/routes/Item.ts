@@ -52,4 +52,17 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
     return response.json(itens);
   });
+  
+  // Rota para deletar Item
+  app.delete("/item/:id", async (request, response) => {
+    const idItem = request.params.id;
+
+    const item = await prisma.item.delete({
+      where: {
+        idItem: idItem
+      }
+    })
+
+    return response.json(item);
+  });
 }
