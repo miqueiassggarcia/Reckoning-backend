@@ -9,13 +9,13 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       imagem
     } = ImagemSchema.parse(request.body);
 
-    const imagens = await prisma.imagem.create({
+    const novaImagem = await prisma.imagem.create({
       data: {
         imagem: imagem
       }
     });
 
-    return response.status(201).json(imagens);
+    return response.status(201).json(novaImagem);
   });
 
   // Rota para pegar imagem
@@ -55,5 +55,27 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     })
 
     return response.json(imagem);
+  });
+
+  // Rota para atualizar imagem
+  app.put("/imagem/:id", async (request, response) => {
+    const {imagem} = ImagemSchema.partial().parse(request.body);
+
+    if(imagem) {
+      const idImagem = request.params.id;
+
+      const novaImagem = await prisma.imagem.update({
+        where: {
+          idImagem: idImagem
+        },
+        data: {
+          imagem: imagem
+        }
+      })
+
+      return response.json(novaImagem);
+    } else {
+      return response.json({"message": "Nada foi modificado"})
+    }
   });
 }

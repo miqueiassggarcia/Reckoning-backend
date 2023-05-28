@@ -65,4 +65,28 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
     return response.json(personagem);
   });
+
+  // Rota para atualizar imagem
+  app.put("/item/:id", async (request, response) => {
+    const { descricao, imagemIdImagem, nome } = PersonagemSchema.partial().parse(request.body);
+
+    if(descricao || imagemIdImagem || nome) {
+      const idPersonagem = request.params.id;
+
+      const novoPersonagem = await prisma.personagem.update({
+        where: {
+          idPersonagem: idPersonagem
+        },
+        data: {
+          imagemIdImagem: imagemIdImagem,
+          descricao: descricao,
+          nome: nome
+        }
+      })
+
+      return response.json(novoPersonagem);
+    } else {
+      return response.json({"message": "Nada foi modificado"})
+    }
+  });
 }

@@ -62,4 +62,27 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
     return response.json(feedback);
   });
+
+  // Rota para atualizar imagem
+  app.put("/item/:id", async (request, response) => {
+    const { atribuicao, feedback } = FeedbackSchema.partial().parse(request.body);
+
+    if(atribuicao || feedback) {
+      const idFeedback = request.params.id;
+
+      const novoFeedback = await prisma.feedback.update({
+        where: {
+          idFeedback: idFeedback
+        },
+        data: {
+          atribuicao: atribuicao,
+          feedback: feedback
+        }
+      })
+
+      return response.json(novoFeedback);
+    } else {
+      return response.json({"message": "Nada foi modificado"})
+    }
+  });
 }

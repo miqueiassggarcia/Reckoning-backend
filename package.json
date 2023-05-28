@@ -1,7 +1,7 @@
 {
-  "name": "serverduo",
+  "name": "reckoning",
   "version": "1.0.0",
-  "description": "��#\u0000 \u0000S\u0000e\u0000r\u0000v\u0000e\u0000r\u0000D\u0000u\u0000o\u0000\r\u0000 \u0000",
+  "description": "Backend do site do reckoning",
   "main": "index.js",
   "scripts": {
     "test": "vitest",
@@ -10,7 +10,7 @@
     "build": "tsup src/tests src/validation src/server.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Lycanus Studio",
   "license": "ISC",
   "devDependencies": {
     "prisma": "^4.14.1",

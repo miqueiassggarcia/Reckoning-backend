@@ -67,4 +67,28 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
     return response.json(versao);
   });
+
+  // Rota para atualizar versao
+  app.put("/versao/:id", async (request, response) => {
+    const {nome, arquivo, descricao} = VersaoSchema.partial().parse(request.body);
+
+    if(nome || arquivo || descricao) {
+      const idVersao = request.params.id;
+
+      const versao = await prisma.versao.update({
+        where: {
+          idVersao: idVersao
+        },
+        data: {
+          nome: nome,
+          arquivo: arquivo,
+          descricao: descricao
+        }
+      })
+
+      return response.json(versao);
+    } else {
+      return response.json({"message": "Nada foi modificado"})
+    }
+  });
 }

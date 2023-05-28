@@ -4,14 +4,14 @@ import { ItensSchema } from "../validation/Itens";
 
 module.exports = (app: Express, prisma: PrismaClient) => {
   // Rota para inserção de itens
-  app.post("/itens", async (request, response) => {
+  app.post("/item", async (request, response) => {
     const {
       imagemIdImagem,
       nome,
       descricao
     } = ItensSchema.parse(request.body)
 
-    const item = await prisma.item.create({
+    const novoItem = await prisma.item.create({
       data: {
         imagemIdImagem: imagemIdImagem,
         nome: nome,
@@ -19,11 +19,11 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       }
     })
 
-    return response.status(201).json(item);
+    return response.status(201).json(novoItem);
   });
 
   // Rota para pegar item
-  app.get("/itens/:id", async (request, response) => {
+  app.get("/item/:id", async (request, response) => {
     const idItens = request.params.id;
 
     const item = await prisma.item.findUniqueOrThrow({
@@ -41,7 +41,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
   })
 
   // Rota para pegar todos os itens
-  app.get("/itens/", async (request, response) => {
+  app.get("/item/", async (request, response) => {
     const itens = await prisma.item.findMany({
       select: {
         imagemIdImagem: true,
@@ -64,5 +64,29 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     })
 
     return response.json(item);
+  });
+
+  // Rota para atualizar imagem
+  app.put("/item/:id", async (request, response) => {
+    const { descricao, imagemIdImagem, nome } = ItensSchema.partial().parse(request.body);
+
+    if(descricao || imagemIdImagem || nome) {
+      const idItem = request.params.id;
+
+      const novoItem = await prisma.item.update({
+        where: {
+          idItem: idItem
+        },
+        data: {
+          descricao: descricao,
+          imagemIdImagem: imagemIdImagem,
+          nome: nome
+        }
+      })
+
+      return response.json(novoItem);
+    } else {
+      return response.json({"message": "Nada foi modificado"})
+    }
   });
 }
