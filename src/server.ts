@@ -86,6 +86,20 @@ app.get("/feedback/:id", async (request, response) => {
   return response.json(feedback);
 })
 
+
+// Rota para pegar todos os feedbacks
+app.get("/feedback/", async (request, response) => {
+  const feedbacks = await prisma.feedback.findMany({
+    select: {
+      atribuicao: true,
+      feedback: true
+    }
+  });
+
+  return response.json(feedbacks);
+});
+
+
 // Rota para inserção de Imagem
 app.post("/imagem", async (request, response) => {
   const {
@@ -136,7 +150,7 @@ app.post("/itens", async (request, response) => {
   return response.status(201).json(item);
 });
 
-// Rota para pegar itens
+// Rota para pegar item
 app.get("/itens/:id", async (request, response) => {
   const idItens = request.params.id;
 
@@ -153,6 +167,19 @@ app.get("/itens/:id", async (request, response) => {
 
   return response.json(item);
 })
+
+// Rota para pegar todos os itens
+app.get("/itens/", async (request, response) => {
+  const itens = await prisma.item.findMany({
+    select: {
+      imagemIdImagem: true,
+      nome: true,
+      descricao: true
+    }
+  });
+
+  return response.json(itens);
+});
 
 // Rota para inserção de personagens
 app.post("/personagens", async (request, response) => {
@@ -173,7 +200,7 @@ app.post("/personagens", async (request, response) => {
   return response.status(201).json(personagem);
 })
 
-// Rota para pegar itens
+// Rota para pegar personagem
 app.get("/personagens/:id", async (request, response) => {
   const idPersonagens = request.params.id;
 
@@ -190,5 +217,18 @@ app.get("/personagens/:id", async (request, response) => {
 
   return response.json(personagem);
 })
+
+// Rota para pegar todos os personagens
+app.get("/personagens/", async (request, response) => {
+  const personagens = await prisma.personagem.findMany({
+    select: {
+      imagemIdImagem: true,
+      nome: true,
+      descricao: true
+    }
+  });
+
+  return response.json(personagens);
+});
 
 app.listen(3333)
