@@ -52,4 +52,17 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
     return response.json(personagens);
   });
+  
+  // Rota para deletar personagem
+  app.delete("/personagem/:id", async (request, response) => {
+    const idPersonagem = request.params.id;
+
+    const personagem = await prisma.personagem.delete({
+      where: {
+        idPersonagem: idPersonagem
+      }
+    })
+
+    return response.json(personagem);
+  });
 }
