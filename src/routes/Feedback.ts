@@ -78,7 +78,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       if (!feedback) {
         return response.status(404).json({ error: 'Feedback não encontrado.' });
       }
-      return response.json(feedback);
+      return response.status(200).json(feedback);
   }catch(error){
     console.error('ocorreu um erro:', error);
     return response.status(500).json({error: 'occoreu um erro ao deletar o feedback'});
@@ -105,7 +105,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         if (!feedback) {
           return response.status(404).json({ error: 'Feedback não encontrado.' });
         }
-        return response.json(novoFeedback);
+        return response.status(200).json(novoFeedback);
       } else {
         return response.status(400).json({"message": "Nada foi modificado"})
       }
