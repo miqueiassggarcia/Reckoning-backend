@@ -118,7 +118,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       }
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao deletar a versão'});
+      return response.status(500).json({error: 'occoreu um erro ao modificar a versão'});
     }
 });
 }
