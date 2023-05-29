@@ -7,6 +7,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
   app.post("/personagem", async (request, response) => {
     try{
       const {
+        idPersonagem,
         imagemIdImagem,
         nome,
         descricao
@@ -14,6 +15,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
       const personagem = await prisma.personagem.create({
         data: {
+          idPersonagem: idPersonagem,
           imagemIdImagem: imagemIdImagem,
           nome: nome,
           descricao: descricao

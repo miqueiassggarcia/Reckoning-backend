@@ -1,7 +1,8 @@
 import z from "zod";
 
 export const PersonagemSchema = z.object({
-imagemIdImagem: z.string()
+    idPersonagem: z.string().optional(),
+    imagemIdImagem: z.string()
     .min(32, { message: "O id da imagem está fora do intervalo mínimo" })
     .max(300, { message: "O id da imagem está fora do intervalo máximo" }),
 nome: z.string()
