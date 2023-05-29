@@ -26,6 +26,7 @@ describe("Testar rota post de versao", () => {
   });
 });
 
+server.close();
 
 describe("Testar rota get de uma versao", () => {
   it("Deve responder uma versao", async () => {
@@ -38,6 +39,8 @@ describe("Testar rota get de uma versao", () => {
   });
 });
 
+server.close();
+
 describe("Testar rota get de listar as versoes", () => {
   it("Deve listar todas as versoes", async () => {
     const res = await request(app).get("/versao");
@@ -45,6 +48,8 @@ describe("Testar rota get de listar as versoes", () => {
     expect(res.body.length).toBeGreaterThan(0);
   });
 });
+
+server.close();
 
 nome = "Update do boss aranha"
 descricao = "Adiciona um boss aranha na fase final"
@@ -69,6 +74,8 @@ describe("Testar rota de atualizar a versao", () => {
   });
 });
 
+server.close();
+
 describe("Testar rota de deletar feedback", () => {
   it("Deve deletar o feedback solicitado", async () => {
     const res = await request(app).delete(`/versao/${idVersao}`);
@@ -81,4 +88,4 @@ describe("Testar rota de deletar feedback", () => {
   });
 });
 
-server.close()
+server.close();

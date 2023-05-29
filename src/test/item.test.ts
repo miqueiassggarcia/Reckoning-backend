@@ -22,6 +22,7 @@ describe("Testar rota post de itens", () => {
   });
 });
 
+server.close();
 
 describe("Testar rota get de 1 item", () => {
   it("Deve responder um item", async () => {
@@ -33,6 +34,8 @@ describe("Testar rota get de 1 item", () => {
   });
 });
 
+server.close();
+
 describe("Testar rota get de listar todos os itens", () => {
   it("Deve listar todos os itens", async () => {
     const res = await request(app).get("/item");
@@ -40,6 +43,8 @@ describe("Testar rota get de listar todos os itens", () => {
     expect(res.body.length).toBeGreaterThan(0);
   });
 });
+
+server.close();
 
 imagemIdImagem = "857b3062-bb7a-458d-8587-d0e4e2c13f6e";
 nome = "Handgun";
@@ -58,6 +63,8 @@ describe("Testar rota de atualizar item", () => {
     expect(res.body.descricao).toBe(`${descricao}`);
   });
 });
+
+server.close();
 
 describe("Testar rota de deletar item", () => {
   it("Deve deletar o item solicitado", async () => {

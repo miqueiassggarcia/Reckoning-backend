@@ -22,6 +22,7 @@ describe("Testar rota post de personagem", () => {
   });
 });
 
+server.close();
 
 describe("Testar rota get de 1 personagem", () => {
   it("Deve responder um personagem", async () => {
@@ -33,6 +34,8 @@ describe("Testar rota get de 1 personagem", () => {
   });
 });
 
+server.close();
+
 describe("Testar rota get de listar todos os personagens", () => {
   it("Deve listar todos os personagens", async () => {
     const res = await request(app).get("/personagem");
@@ -40,6 +43,8 @@ describe("Testar rota get de listar todos os personagens", () => {
     expect(res.body.length).toBeGreaterThan(0);
   });
 });
+
+server.close();
 
 imagemIdImagem = "857b3062-bb7a-458d-8587-d0e4e2c13f6e";
 nome = "Luizin";
@@ -58,6 +63,8 @@ describe("Testar rota de atualizar personagem", () => {
     expect(res.body.descricao).toBe(`${descricao}`);
   });
 });
+
+server.close();
 
 describe("Testar rota de deletar personagem", () => {
   it("Deve deletar o personagem solicitado", async () => {

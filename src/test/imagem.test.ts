@@ -16,6 +16,7 @@ describe("Testar rota post de imagem", () => {
   });
 });
 
+server.close();
 
 describe("Testar rota get de uma imagem", () => {
   it("Deve responder uma imagem", async () => {
@@ -25,6 +26,8 @@ describe("Testar rota get de uma imagem", () => {
   });
 });
 
+server.close();
+
 describe("Testar rota get de listar todas as imagens", () => {
   it("Deve listar todas as imagens", async () => {
     const res = await request(app).get("/imagem");
@@ -32,6 +35,8 @@ describe("Testar rota get de listar todas as imagens", () => {
     expect(res.body.length).toBeGreaterThan(0);
   });
 });
+
+server.close();
 
 imagem = "https://Reckoning-image-home"
 
@@ -45,6 +50,8 @@ describe("Testar rota de atualizar a imagem", () => {
     expect(res.body.imagem).toBe(`${imagem}`);
   });
 });
+
+server.close();
 
 describe("Testar rota de deletar a imagem", () => {
   it("Deve deletar a imagem solicitada", async () => {
