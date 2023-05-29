@@ -7,15 +7,19 @@ module.exports = (app: Express, prisma: PrismaClient) => {
   app.post("/versao", async (request, response) => {
     try{
       const {
+        idVersao,
         nome,
         descricao,
+        data,
         arquivo
       } = VersaoSchema.parse(request.body);
 
       const versao = await prisma.versao.create({
         data: {
+          idVersao: idVersao,
           nome: nome,
           descricao: descricao,
+          data: data,
           arquivo: arquivo
         }
       });
@@ -84,7 +88,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       if (!versao) {
         return response.status(404).json({ error: 'Versão não encontrado.' });
       }
-      return response.json(versao);
+      return response.status(200).json(versao);
     }catch(error){
       console.error('ocorreu um erro:', error);
       return response.status(500).json({error: 'occoreu um erro ao deletar a versão'});
@@ -94,9 +98,9 @@ module.exports = (app: Express, prisma: PrismaClient) => {
   // Rota para atualizar versao
   app.put("/versao/:id", async (request, response) => {
     try{
-      const {nome, arquivo, descricao} = VersaoSchema.partial().parse(request.body);
+      const {nome, arquivo, descricao, data} = VersaoSchema.partial().parse(request.body);
 
-      if(nome || arquivo || descricao) {
+      if(nome || arquivo || descricao || data) {
         const idVersao = request.params.id;
 
         const versao = await prisma.versao.update({
@@ -106,6 +110,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
           data: {
             nome: nome,
             arquivo: arquivo,
+            data: data,
             descricao: descricao
           }
         });
