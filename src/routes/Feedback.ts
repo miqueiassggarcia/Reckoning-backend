@@ -7,23 +7,26 @@ module.exports = (app: Express, prisma: PrismaClient) => {
   app.post("/feedback", async (request, response) => {
     try {
       const {
+        idFeedback,
         atribuicao,
         feedback,
       } = FeedbackSchema.parse(request.body);
 
       const feedbacks = await prisma.feedback.create({
         data: {
+          idFeedback: idFeedback,
           atribuicao: atribuicao,
           feedback: feedback
         }
       });
       return response.status(201).json(feedbacks);
-    
-  }catch(error){
-    console.error('ocorreu um erro:', error);
-    return response.status(400).json({error: 'occoreu um erro ao cadastrar o feedback'});
-  }
-});
+    }catch(error){
+      console.error('ocorreu um erro:', error);
+      return response.status(400).json({error: 'occoreu um erro ao cadastrar o feedback'});
+    }
+  });
+
+
   // Rota para pegar feedback
   app.get("/feedback/:id", async (request, response) => {
     try{
@@ -42,11 +45,11 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         return response.status(404).json({ error: 'Feedback não encontrado.' });
       }
       return response.json(feedback);
-  }catch(error){
-    console.error('ocorreu um erro:', error);
-    return response.status(500).json({error: 'occoreu um erro ao procurar o feedback'});
-  }
-});
+    }catch(error){
+      console.error('ocorreu um erro:', error);
+      return response.status(500).json({error: 'occoreu um erro ao procurar o feedback'});
+    }
+  });
 
 
   // Rota para pegar todos os feedbacks
@@ -59,11 +62,12 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         }
       });
       return response.status(200).json(feedbacks);
-  }catch(error){
-    console.error('ocorreu um erro:', error);
-    return response.status(500).json({error: 'occoreu um erro ao procurar os feedbacks'});
-  }
-});
+    }catch(error){
+      console.error('ocorreu um erro:', error);
+      return response.status(500).json({error: 'occoreu um erro ao procurar os feedbacks'});
+    }
+  });
+
 
   // Rota para deletar feedback
   app.delete("/feedback/:id", async (request, response) => {
@@ -79,11 +83,12 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         return response.status(404).json({ error: 'Feedback não encontrado.' });
       }
       return response.status(200).json(feedback);
-  }catch(error){
-    console.error('ocorreu um erro:', error);
-    return response.status(500).json({error: 'occoreu um erro ao deletar o feedback'});
-  }
-});
+    }catch(error){
+      console.error('ocorreu um erro:', error);
+      return response.status(500).json({error: 'occoreu um erro ao deletar o feedback'});
+    }
+  });
+
 
   // Rota para atualizar feedback
   app.put("/feedback/:id", async (request, response) => {
@@ -113,5 +118,5 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       console.error('ocorreu um erro:', error);
       return response.status(500).json({error: 'occoreu um erro ao atualizar o feedback'});
     }
-});
+  });
 }

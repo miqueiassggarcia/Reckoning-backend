@@ -1,6 +1,7 @@
 import z from "zod";
 
 export const FeedbackSchema = z.object({
+idFeedback: z.string().optional(),
 atribuicao: z.string()
     .min(1, { message: "Sua atribuicao pracisa conter ao menos 1 caractere" })
     .max(100, { message: "Sua atribuicao tem que ter menos de 100 caracteres" }),
