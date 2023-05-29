@@ -22,7 +22,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       return response.status(201).json(novoItem);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(400).json({error: 'occoreu um erro ao cadastrar a item'});
+      return response.status(400).json({error: 'occoreu um erro ao cadastrar item'});
     }
 });
 
