@@ -7,11 +7,13 @@ module.exports = (app: Express, prisma: PrismaClient) => {
   app.post("/imagem", async (request, response) => {
     try{
       const {
+        idImagem,
         imagem
       } = ImagemSchema.parse(request.body);
 
       const novaImagem = await prisma.imagem.create({
         data: {
+          idImagem: idImagem,
           imagem: imagem
         }
       });
@@ -84,9 +86,9 @@ module.exports = (app: Express, prisma: PrismaClient) => {
   // Rota para atualizar imagem
   app.put("/imagem/:id", async (request, response) => {
     try{
-    const {imagem} = ImagemSchema.partial().parse(request.body);
+    const {idImagem, imagem} = ImagemSchema.partial().parse(request.body);
 
-    if(imagem) {
+    if(idImagem || imagem) {
       const idImagem = request.params.id;
 
       const novaImagem = await prisma.imagem.update({
