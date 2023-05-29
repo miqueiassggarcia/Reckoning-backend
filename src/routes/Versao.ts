@@ -94,31 +94,31 @@ module.exports = (app: Express, prisma: PrismaClient) => {
   // Rota para atualizar versao
   app.put("/versao/:id", async (request, response) => {
     try{
-    const {nome, arquivo, descricao} = VersaoSchema.partial().parse(request.body);
+      const {nome, arquivo, descricao} = VersaoSchema.partial().parse(request.body);
 
-    if(nome || arquivo || descricao) {
-      const idVersao = request.params.id;
+      if(nome || arquivo || descricao) {
+        const idVersao = request.params.id;
 
-      const versao = await prisma.versao.update({
-        where: {
-          idVersao: idVersao
-        },
-        data: {
-          nome: nome,
-          arquivo: arquivo,
-          descricao: descricao
+        const versao = await prisma.versao.update({
+          where: {
+            idVersao: idVersao
+          },
+          data: {
+            nome: nome,
+            arquivo: arquivo,
+            descricao: descricao
+          }
+        });
+        if (!versao) {
+          return response.status(404).json({ error: 'Versão não encontrada.' });
         }
-      });
-      if (!versao) {
-        return response.status(404).json({ error: 'Versão não encontrada.' });
+        return response.json(versao);
+      } else {
+        return response.status(400).json({"message": "Nada foi modificado"})
       }
-      return response.json(versao);
-    } else {
-      return response.status(400).json({"message": "Nada foi modificado"})
+    }catch(error){
+      console.error('ocorreu um erro:', error);
+      return response.status(500).json({error: 'occoreu um erro ao deletar a versão'});
     }
-  }catch(error){
-    console.error('ocorreu um erro:', error);
-    return response.status(500).json({error: 'occoreu um erro ao deletar a versão'});
-  }
-  });
+});
 }
