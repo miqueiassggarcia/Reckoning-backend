@@ -46,12 +46,13 @@ describe("Testar rota get de listar as versoes", () => {
   });
 });
 
+nome = "Update do boss aranha"
+descricao = "Adiciona um boss aranha na fase final"
+data = currentDateTime.toISOString();
+arquivo = "https://reckoning-version1.1.2"
+
 describe("Testar rota de atualizar a versao", () => {
   it("Deve atualizar a versao", async () => {
-    nome = "Update do boss aranha"
-    descricao = "Adiciona um boss aranha na fase final"
-    data = currentDateTime.toISOString();
-    arquivo = "https://reckoning-version1.1.2"
     const res = await request(app).put(`/versao/${idVersao}`).send({
         "nome": `${nome}`,
         "descricao": `${descricao}`,

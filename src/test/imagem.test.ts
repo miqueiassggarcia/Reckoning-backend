@@ -33,9 +33,10 @@ describe("Testar rota get de listar todas as imagens", () => {
   });
 });
 
+imagem = "https://Reckoning-image-home"
+
 describe("Testar rota de atualizar a imagem", () => {
   it("Deve atualizar a imagem solicitada", async () => {
-    imagem = "https://Reckoning-image-home"
     const res = await request(app).put(`/imagem/${idImagem}`).send({
         "imagem": `${imagem}`
     });
