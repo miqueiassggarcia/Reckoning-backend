@@ -1,12 +1,8 @@
 const request = require("supertest");
 import { app, server } from "../server";
 
-afterAll(() => {
-  server.close();
-})
-
 const currentDateTime = new Date();
-const idVersao = "15a6181e-7d7d-406a-a214-334ed1967d3d";
+const idVersao = "3cdd9c6f-23f7-4841-9c3b-066b08043af5";
 let nome = "Update do boss";
 let descricao = "Adiciona um novo boss na fase final";
 let data = currentDateTime.toISOString();
@@ -83,3 +79,5 @@ describe("Testar rota de deletar feedback", () => {
     expect(res.body.arquivo).toBe(`${arquivo}`);
   });
 });
+
+server.close()

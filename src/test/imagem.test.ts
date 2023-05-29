@@ -1,11 +1,7 @@
 const request = require("supertest");
 import { app, server } from "../server";
 
-afterAll(() => {
-  server.close();
-})
-
-const idImagem = "15a6381e-7d7d-401a-a244-331ed3467d0d";
+const idImagem = "1664c23d-d9bc-4322-8cab-27a755d06dbc";
 let imagem = "https://reckoning-image";
 
 describe("Testar rota post de imagem", () => {
@@ -57,3 +53,5 @@ describe("Testar rota de deletar a imagem", () => {
     expect(res.body.imagem).toBe(`${imagem}`);
   });
 });
+
+server.close();

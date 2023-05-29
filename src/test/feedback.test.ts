@@ -1,11 +1,7 @@
 const request = require("supertest");
 import { app, server } from "../server";
 
-afterAll(() => {
-  server.close();
-})
-
-const idFeedback = "15a6381e-7d7d-406a-a244-334ed3967d3d";
+const idFeedback = "3278a41c-8cb4-4fb9-b944-0422b40a8815";
 let atribuicao = "Site";
 let feedback = "Muito massa";
 
@@ -64,3 +60,5 @@ describe("Testar rota de deletar feedback", () => {
     expect(res.body.feedback).toBe(`${feedback}`);
   });
 });
+
+server.close();
