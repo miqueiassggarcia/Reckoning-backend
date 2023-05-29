@@ -5,61 +5,85 @@ import { ImagemSchema } from "../validation/Imagem";
 module.exports = (app: Express, prisma: PrismaClient) => {
   // Rota para inserção de Imagem
   app.post("/imagem", async (request, response) => {
-    const {
-      imagem
-    } = ImagemSchema.parse(request.body);
+    try{
+      const {
+        imagem
+      } = ImagemSchema.parse(request.body);
 
-    const novaImagem = await prisma.imagem.create({
-      data: {
-        imagem: imagem
-      }
-    });
+      const novaImagem = await prisma.imagem.create({
+        data: {
+          imagem: imagem
+        }
+      });
 
-    return response.status(201).json(novaImagem);
-  });
+      return response.status(201).json(novaImagem);
+    }catch(error){
+      console.error('ocorreu um erro:', error);
+      return response.status(400).json({error: 'occoreu um erro ao inserir imagem'});
+    }
+});
 
   // Rota para pegar imagem
   app.get("/imagem/:id", async (request, response) => {
-    const idImagem = request.params.id;
+    try{
+      const idImagem = request.params.id;
 
-    const imagem = await prisma.imagem.findUniqueOrThrow({
-      select: {
-        imagem: true
-      },
-      where: {
-        idImagem: idImagem
+      const imagem = await prisma.imagem.findUniqueOrThrow({
+        select: {
+          imagem: true
+        },
+        where: {
+          idImagem: idImagem
+        }
+      });
+      if (!imagem) {
+        return response.status(404).json({ error: 'imagem não encontrada.' });
       }
-    })
-
-    return response.json(imagem);
-  })
+      return response.json(imagem);
+    }catch(error){
+      console.error('ocorreu um erro:', error);
+      return response.status(500).json({error: 'occoreu um erro ao buscar imagem'});
+    }
+});
 
 // Rota para pegar todas as Imagens
   app.get("/imagem/", async (request, response) => {
-    const imagem = await prisma.imagem.findMany({
-      select: {
-        imagem: true
-      }
-    });
-
-    return response.json(imagem);
-  });
+    try{
+      const imagem = await prisma.imagem.findMany({
+        select: {
+          imagem: true
+        }
+      });
+      return response.json(imagem);
+    }catch(error){
+      console.error('ocorreu um erro:', error);
+      return response.status(500).json({error: 'occoreu um erro ao buscar imagens'});
+    }
+});
 
   // Rota para deletar imagem
   app.delete("/imagem/:id", async (request, response) => {
-    const idImagem = request.params.id;
+    try{
+      const idImagem = request.params.id;
 
-    const imagem = await prisma.imagem.delete({
-      where: {
-        idImagem: idImagem
+      const imagem = await prisma.imagem.delete({
+        where: {
+          idImagem: idImagem
+        }
+      });
+      if (!imagem) {
+        return response.status(404).json({ error: 'imagem não encontrada.' });
       }
-    })
-
-    return response.json(imagem);
-  });
+      return response.json(imagem);
+    }catch(error){
+      console.error('ocorreu um erro:', error);
+      return response.status(500).json({error: 'occoreu um erro ao deletar imagem'});
+    }
+});
 
   // Rota para atualizar imagem
   app.put("/imagem/:id", async (request, response) => {
+    try{
     const {imagem} = ImagemSchema.partial().parse(request.body);
 
     if(imagem) {
@@ -72,11 +96,17 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         data: {
           imagem: imagem
         }
-      })
-
+      });
+      if (!imagem) {
+        return response.status(404).json({ error: 'imagem não encontrada.' });
+      }
       return response.json(novaImagem);
     } else {
-      return response.json({"message": "Nada foi modificado"})
+      return response.status(400).json({"message": "Nada foi modificado"})
     }
+  }catch(error){
+    console.error('ocorreu um erro:', error);
+    return response.status(500).json({error: 'occoreu um erro ao modificar imagem'});
+  }
   });
 }
