@@ -49,7 +49,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       console.error('ocorreu um erro:', error);
       return response.status(500).json({error: 'occoreu um erro ao procurar o item'});
     }
-  })
+  });
 
   // Rota para pegar todos os itens
   app.get("/item/", async (request, response) => {
