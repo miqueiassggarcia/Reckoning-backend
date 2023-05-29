@@ -52,6 +52,41 @@ module.exports = (app: Express, prisma: PrismaClient) => {
   });
 
 
+  // Rota para pegar id de feedback
+  app.get("/search/feedback", async (request, response) => {
+    const atribuicao = request.query.atribuicao!;
+    const feedback = request.query.feedback;
+
+    if(!atribuicao || !feedback) {
+      response.status(400).json({"message": "Dados não encontrados"})
+    } else {
+      if(typeof(atribuicao) == "string" && typeof(feedback) == "string") {
+        try{
+          const feedbackID = await prisma.feedback.findFirstOrThrow({
+            select: {
+              idFeedback: true
+            },
+            where: {
+              atribuicao: atribuicao,
+              feedback: feedback
+            }
+          });
+
+          if (!feedbackID) {
+            return response.status(404).json({ error: 'Feedback não encontrado.' });
+          }
+          return response.json(feedbackID);
+        }catch(error){
+          console.error('ocorreu um erro:', error);
+          return response.status(500).json({error: 'occoreu um erro ao procurar o feedback'});
+        }
+      } else {
+        response.status(400).json({"message": "Formato de dados incompativel"})
+      }
+    }
+  });
+
+
   // Rota para pegar todos os feedbacks
   app.get("/feedback/", async (request, response) => {
     try{
