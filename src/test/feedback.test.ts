@@ -41,7 +41,7 @@ describe("Testar rota get de 1 feedback", () => {
         });
     it('Deve retornar status 500 em caso de erro interno', async () => {
         // Simulando um erro interno no servidor
-        jest.spyOn(prisma.personagem, 'findUniqueOrThrow').mockRejectedValueOnce(new Error('Erro interno'));
+        jest.spyOn(prisma.feedback, 'findUniqueOrThrow').mockRejectedValueOnce(new Error('Erro interno'));
         const res = await request(app).get(`/feedback/${idFeedback}`);
         expect(res.statusCode).toBe(500);
         expect(res.body).toHaveProperty('error', 'occoreu um erro ao procurar feedback');
@@ -57,7 +57,7 @@ describe("Testar rota get de listar todos os feedbacks", () => {
     });
     it('Deve retornar status 500 em caso de erro interno', async () => {
         // Simulando um erro interno no servidor
-        jest.spyOn(prisma.personagem, 'findMany').mockRejectedValueOnce(new Error('Erro interno'));
+        jest.spyOn(prisma.feedback, 'findMany').mockRejectedValueOnce(new Error('Erro interno'));
         const res = await request(app).get(`/feedback`);
         expect(res.statusCode).toBe(500);
         expect(res.body).toHaveProperty('error', 'occoreu um erro ao procurar feedback');
@@ -92,7 +92,7 @@ describe("Testar rota de atualizar feedback", () => {
     });
     it('Deve retornar status 500 em caso de erro interno', async () => {
         // Simulando um erro interno no servidor
-        jest.spyOn(prisma.personagem, 'update').mockRejectedValueOnce(new Error('Erro interno'));
+        jest.spyOn(prisma.feedback, 'update').mockRejectedValueOnce(new Error('Erro interno'));
         const res = await request(app).put(`/feedback/${idFeedback}`);
         expect(res.statusCode).toBe(500);
         expect(res.body).toHaveProperty('error', 'occoreu um erro ao atualizar feedback');
@@ -116,7 +116,7 @@ describe("Testar rota de deletar feedback", () => {
     });
     it('Deve retornar status 500 em caso de erro interno', async () => {
         // Simulando um erro interno no servidor
-        jest.spyOn(prisma.personagem, 'delete').mockRejectedValueOnce(new Error('Erro interno'));
+        jest.spyOn(prisma.feedback, 'delete').mockRejectedValueOnce(new Error('Erro interno'));
         const res = await request(app).delete(`/feedback/${idFeedback}`);
         expect(res.statusCode).toBe(500);
         expect(res.body).toHaveProperty('error', 'occoreu um erro ao deletar feedback');
