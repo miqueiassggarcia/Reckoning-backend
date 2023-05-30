@@ -1,5 +1,6 @@
 const request = require("supertest");
 import { app } from "../server";
+const prisma = require('../prisma'); 
 
 const idFeedback = "3278a41c-8cb4-4fb9-b944-0422b40a8815";
 let atribuicao = "Site";
