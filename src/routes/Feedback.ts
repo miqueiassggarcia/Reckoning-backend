@@ -22,7 +22,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       return response.status(201).json(feedbacks);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(400).json({error: 'occoreu um erro ao cadastrar o feedback'});
+      return response.status(400).json({"error": "ocorreu um erro ao cadastrar o feedback"});
     }
   });
 
@@ -32,7 +32,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     try{
       const idFeedback = request.params.id;
 
-      const feedback = await prisma.feedback.findUniqueOrThrow({
+      const feedback = await prisma.feedback.findUnique({
         select: {
           atribuicao: true,
           feedback: true
@@ -47,7 +47,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       return response.json(feedback);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao procurar o feedback'});
+      return response.status(500).json({"error": 'ocorreu um erro ao procurar o feedback'});
     }
   });
 
@@ -99,7 +99,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       return response.status(200).json(feedbacks);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao procurar os feedbacks'});
+      return response.status(500).json({"error": 'ocorreu um erro ao procurar os feedbacks'});
     }
   });
 
@@ -109,15 +109,23 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     try{
       const idFeedback = request.params.id;
 
-      const feedback = await prisma.feedback.delete({
+      const feedbackExiste = await prisma.feedback.findUnique({
         where: {
           idFeedback: idFeedback
         }
       });
-      if (!feedback) {
-        return response.status(404).json({ error: 'Feedback não encontrado.' });
+
+      if (feedbackExiste) {
+        const feedback = await prisma.feedback.delete({
+          where: {
+            idFeedback: idFeedback
+          }
+        })
+        return response.status(200).json(feedback);
+      } else {
+        return response.status(404).json({ "error": 'Feedback não encontrado.' });
       }
-      return response.status(200).json(feedback);
+
     }catch(error){
       console.error('ocorreu um erro:', error);
       return response.status(500).json({error: 'occoreu um erro ao deletar o feedback'});
@@ -133,19 +141,26 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       if(atribuicao || feedback) {
         const idFeedback = request.params.id;
 
-        const novoFeedback = await prisma.feedback.update({
+        const feedbackExiste = await prisma.feedback.findUnique({
           where: {
             idFeedback: idFeedback
-          },
-          data: {
-            atribuicao: atribuicao,
-            feedback: feedback
           }
         });
-        if (!feedback) {
+
+        if (feedbackExiste) {
+          const novoFeedback = await prisma.feedback.update({
+            where: {
+              idFeedback: idFeedback
+            },
+            data: {
+              atribuicao: atribuicao,
+              feedback: feedback
+            }
+          });
+          return response.status(200).json(novoFeedback);
+        } else {
           return response.status(404).json({ error: 'Feedback não encontrado.' });
         }
-        return response.status(200).json(novoFeedback);
       } else {
         return response.status(400).json({"message": "Nada foi modificado"})
       }

@@ -1,6 +1,5 @@
 const request = require("supertest");
-import { app } from "../server";
-const prisma = require('../prisma'); 
+import { app, prisma } from "../server";
 
 const currentDateTime = new Date();
 const idVersao = "3cdd9c6f-23f7-4841-9c3b-066b08043af5";

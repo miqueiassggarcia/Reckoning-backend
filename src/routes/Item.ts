@@ -24,7 +24,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       return response.status(201).json(novoItem);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(400).json({error: 'occoreu um erro ao cadastrar item'});
+      return response.status(400).json({"error": 'ocorreu um erro ao cadastrar item'});
     }
 });
 
@@ -33,7 +33,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     try{
       const idItens = request.params.id;
 
-      const item = await prisma.item.findUniqueOrThrow({
+      const item = await prisma.item.findUnique({
         select: {
           imagemIdImagem: true,
           nome: true,
@@ -44,12 +44,12 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         }
       });
       if (!item) {
-        return response.status(404).json({ error: 'Item não encontrado.' });
+        return response.status(404).json({ error: 'item não encontrado.' });
       }
       return response.json(item);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao procurar o item'});
+      return response.status(500).json({"error": 'ocorreu um erro ao procurar o item'});
     }
   });
 
@@ -66,7 +66,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       return response.json(itens);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao procurar os itens'});
+      return response.status(500).json({"error": 'ocorreu um erro ao procurar os itens'});
     }
 });
   
@@ -75,18 +75,26 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     try{
       const idItem = request.params.id;
 
-      const item = await prisma.item.delete({
+      const itemExiste = await prisma.item.findUnique({
         where: {
           idItem: idItem
         }
       });
-      if (!item) {
-        return response.status(404).json({ error: 'Item não encontrado.' });
+
+      if (itemExiste) {
+        const item = await prisma.item.delete({
+          where: {
+            idItem: idItem
+          }
+        });
+        
+        return response.json(item);
+      } else {
+        return response.status(404).json({ "error": 'item não encontrado.' });
       }
-      return response.json(item);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao deletar item'});
+      return response.status(500).json({'error': 'ocorreu um erro ao deletar o item'});
     }
   });
 
@@ -98,26 +106,34 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       if(descricao || imagemIdImagem || nome) {
         const idItem = request.params.id;
 
-        const novoItem = await prisma.item.update({
+        const itemExiste = await prisma.item.findUnique({
           where: {
             idItem: idItem
           },
-          data: {
-            descricao: descricao,
-            imagemIdImagem: imagemIdImagem,
-            nome: nome
-          }
         });
-        if (!novoItem) {
-          return response.status(404).json({ error: 'Item não encontrado.' });
+
+        if (itemExiste) {
+          const novoItem = await prisma.item.update({
+            where: {
+              idItem: idItem
+            },
+            data: {
+              descricao: descricao,
+              imagemIdImagem: imagemIdImagem,
+              nome: nome
+            }
+          });
+          
+          return response.json(novoItem);
+        } else {
+          return response.status(404).json({ "error": 'item não encontrado.' });
         }
-        return response.json(novoItem);
       } else {
         return response.status(400).json({"message": "Nada foi modificado"})
       }
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao modificar item'});
+      return response.status(500).json({"error": 'ocorreu um erro ao atualizar item'});
     }
 });
 }

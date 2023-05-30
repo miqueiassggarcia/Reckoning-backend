@@ -1,6 +1,5 @@
 const request = require("supertest");
-import { app } from "../server";
-const prisma = require('../prisma'); 
+import { app, prisma } from "../server";
 
 const idImagem = "1664c23d-d9bc-4322-8cab-27a755d06dbc";
 let imagem = "https://reckoning-image";
@@ -20,7 +19,7 @@ describe("Testar rota post de imagem", () => {
             .post('/imagem')
             .send({});
         expect(res.statusCode).toBe(400);
-        expect(res.body).toHaveProperty('message', 'Nada foi cadastrado');
+        expect(res.body).toHaveProperty("error", 'ocorreu um erro ao inserir imagem');
     });
 });
 
@@ -39,10 +38,10 @@ describe("Testar rota get de uma imagem", () => {
         });
     it('Deve retornar status 500 em caso de erro interno', async () => {
         // Simulando um erro interno no servidor
-        jest.spyOn(prisma.imagem, 'findUniqueOrThrow').mockRejectedValueOnce(new Error('Erro interno'));
+        jest.spyOn(prisma.imagem, 'findUnique').mockRejectedValueOnce(new Error('Erro interno'));
         const res = await request(app).get(`/imagem/${idImagem}`);
         expect(res.statusCode).toBe(500);
-        expect(res.body).toHaveProperty('error', 'occoreu um erro ao procurar imagem');
+        expect(res.body).toHaveProperty("error", 'ocorreu um erro ao buscar imagem');
     });
 });
 
@@ -58,7 +57,7 @@ describe("Testar rota get de listar todas as imagens", () => {
         jest.spyOn(prisma.imagem, 'findMany').mockRejectedValueOnce(new Error('Erro interno'));
         const res = await request(app).get(`/imagem`);
         expect(res.statusCode).toBe(500);
-        expect(res.body).toHaveProperty('error', 'occoreu um erro ao procurar imagem');
+        expect(res.body).toHaveProperty("error", 'occoreu um erro ao buscar imagens');
     });
 });
 
@@ -76,7 +75,9 @@ describe("Testar rota de atualizar a imagem", () => {
     });
     it('Deve retornar status 404 para uma imagem inexistente', async () => {
         let idImagemm = "341c-8cb4-4fb9";
-        const res = await request(app).put(`/imagem/${idImagemm}`); 
+        const res = await request(app).put(`/imagem/${idImagemm}`).send({
+            "imagem": `${imagem}`
+        }); 
         expect(res.statusCode).toBe(404);
         expect(res.body).toHaveProperty('error', 'imagem não encontrada.');
     });
@@ -88,11 +89,13 @@ describe("Testar rota de atualizar a imagem", () => {
     it('Deve retornar status 500 em caso de erro interno', async () => {
         // Simulando um erro interno no servidor
         jest.spyOn(prisma.imagem, 'update').mockRejectedValueOnce(new Error('Erro interno'));
-        const res = await request(app).put(`/imagem/${idImagem}`);
+        const res = await request(app).put(`/imagem/${idImagem}`).send({
+            "imagem": `${imagem}`
+        });
         expect(res.statusCode).toBe(500);
-        expect(res.body).toHaveProperty('error', 'occoreu um erro ao atualizar imagem');
+        expect(res.body).toHaveProperty("error", 'ocorreu um erro ao modificar imagem');
     });
-});
+}); 
 
 
 describe("Testar rota de deletar a imagem", () => {
@@ -110,7 +113,7 @@ describe("Testar rota de deletar a imagem", () => {
     });
     it('Deve retornar status 500 em caso de erro interno', async () => {
         // Simulando um erro interno no servidor
-        jest.spyOn(prisma.imagem, 'delete').mockRejectedValueOnce(new Error('Erro interno'));
+        jest.spyOn(prisma.imagem, 'findUnique').mockRejectedValueOnce(new Error('Erro interno'));
         const res = await request(app).delete(`/imagem/${idImagem}`);
         expect(res.statusCode).toBe(500);
         expect(res.body).toHaveProperty('error', 'occoreu um erro ao deletar imagem');

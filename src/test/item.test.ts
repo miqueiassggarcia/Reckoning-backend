@@ -1,6 +1,5 @@
 const request = require("supertest");
-import { app } from "../server";
-const prisma = require('../prisma'); 
+import { app, prisma } from "../server";
 
 const idItem = "d29d380b-99b4-48aa-93cf-3695570cf511";
 let imagemIdImagem = "64517b59-ed1c-415b-8212-8c4d6ff755a2";
@@ -26,7 +25,7 @@ describe("Testar rota post de itens", () => {
                 .post('/item')
                 .send({});
             expect(res.statusCode).toBe(400);
-            expect(res.body).toHaveProperty('message', 'Nada foi cadastrado');
+            expect(res.body).toHaveProperty("error", 'ocorreu um erro ao cadastrar item');
         });
 });
 
@@ -47,10 +46,10 @@ describe("Testar rota get de 1 item", () => {
         });
     it('Deve retornar status 500 em caso de erro interno', async () => {
         // Simulando um erro interno no servidor
-        jest.spyOn(prisma.item, 'findUniqueOrThrow').mockRejectedValueOnce(new Error('Erro interno'));
+        jest.spyOn(prisma.item, 'findUnique').mockRejectedValueOnce(new Error('Erro interno'));
         const res = await request(app).get(`/item/${idItem}`);
         expect(res.statusCode).toBe(500);
-        expect(res.body).toHaveProperty('error', 'occoreu um erro ao procurar item');
+        expect(res.body).toHaveProperty('error', 'ocorreu um erro ao procurar o item');
     });
 });
 
@@ -66,7 +65,7 @@ describe("Testar rota get de listar todos os itens", () => {
         jest.spyOn(prisma.item, 'findMany').mockRejectedValueOnce(new Error('Erro interno'));
         const res = await request(app).get(`/item`);
         expect(res.statusCode).toBe(500);
-        expect(res.body).toHaveProperty('error', 'occoreu um erro ao procurar item');
+        expect(res.body).toHaveProperty('error', 'ocorreu um erro ao procurar os itens');
     });
 });
 
@@ -90,7 +89,11 @@ describe("Testar rota de atualizar item", () => {
         });
         it('Deve retornar status 404 para uma item inexistente', async () => {
             let idItemm = "341c-8cb4-4fb9";
-            const res = await request(app).put(`/item/${idItemm}`); 
+            const res = await request(app).put(`/item/${idItemm}`).send({
+                "imagemIdImagem": `${imagemIdImagem}`,
+                "nome": `${nome}`,
+                "descricao": `${descricao}`
+            });; 
             expect(res.statusCode).toBe(404);
             expect(res.body).toHaveProperty('error', 'item não encontrado.');
         });
@@ -101,10 +104,14 @@ describe("Testar rota de atualizar item", () => {
         });
         it('Deve retornar status 500 em caso de erro interno', async () => {
             // Simulando um erro interno no servidor
-            jest.spyOn(prisma.item, 'update').mockRejectedValueOnce(new Error('Erro interno'));
-            const res = await request(app).put(`/item/${idItem}`);
+            jest.spyOn(prisma.item, 'findUnique').mockRejectedValueOnce(new Error('Erro interno'));
+            const res = await request(app).put(`/item/${idItem}`).send({
+                "imagemIdImagem": `${imagemIdImagem}`,
+                "nome": `${nome}`,
+                "descricao": `${descricao}`
+            });;
             expect(res.statusCode).toBe(500);
-            expect(res.body).toHaveProperty('error', 'occoreu um erro ao atualizar item');
+            expect(res.body).toHaveProperty('error', 'ocorreu um erro ao atualizar item');
         });
 });
 
@@ -126,9 +133,9 @@ describe("Testar rota de deletar item", () => {
     });
     it('Deve retornar status 500 em caso de erro interno', async () => {
         // Simulando um erro interno no servidor
-        jest.spyOn(prisma.item, 'delete').mockRejectedValueOnce(new Error('Erro interno'));
+        jest.spyOn(prisma.item, 'findUnique').mockRejectedValueOnce(new Error('Erro interno'));
         const res = await request(app).delete(`/item/${idItem}`);
         expect(res.statusCode).toBe(500);
-        expect(res.body).toHaveProperty('error', 'occoreu um erro ao deletar item');
+        expect(res.body).toHaveProperty('error', 'ocorreu um erro ao deletar o item');
     });
 });

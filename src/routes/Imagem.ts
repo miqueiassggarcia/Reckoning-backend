@@ -21,7 +21,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       return response.status(201).json(novaImagem);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(400).json({error: 'occoreu um erro ao inserir imagem'});
+      return response.status(400).json({"error": 'ocorreu um erro ao inserir imagem'});
     }
 });
 
@@ -30,7 +30,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     try{
       const idImagem = request.params.id;
 
-      const imagem = await prisma.imagem.findUniqueOrThrow({
+      const imagem = await prisma.imagem.findUnique({
         select: {
           imagem: true
         },
@@ -38,13 +38,15 @@ module.exports = (app: Express, prisma: PrismaClient) => {
           idImagem: idImagem
         }
       });
+
       if (!imagem) {
         return response.status(404).json({ error: 'imagem não encontrada.' });
       }
+
       return response.json(imagem);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao buscar imagem'});
+      return response.status(500).json({"error": 'ocorreu um erro ao buscar imagem'});
     }
 });
 
@@ -59,7 +61,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       return response.json(imagem);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao buscar imagens'});
+      return response.status(500).json({"error": 'occoreu um erro ao buscar imagens'});
     }
 });
 
@@ -68,15 +70,23 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     try{
       const idImagem = request.params.id;
 
-      const imagem = await prisma.imagem.delete({
+      const imagemExiste = await prisma.imagem.findUnique({
         where: {
           idImagem: idImagem
         }
       });
-      if (!imagem) {
+      
+      if (imagemExiste) {
+        const imagem = await prisma.imagem.delete({
+          where: {
+            idImagem: idImagem
+          }
+        })
+
+        return response.json(imagem);
+      } else {
         return response.status(404).json({ error: 'imagem não encontrada.' });
       }
-      return response.json(imagem);
     }catch(error){
       console.error('ocorreu um erro:', error);
       return response.status(500).json({error: 'occoreu um erro ao deletar imagem'});
@@ -91,24 +101,32 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     if(idImagem || imagem) {
       const idImagem = request.params.id;
 
-      const novaImagem = await prisma.imagem.update({
+      const imagemExiste = await prisma.imagem.findUnique({
         where: {
           idImagem: idImagem
-        },
-        data: {
-          imagem: imagem
         }
       });
-      if (!imagem) {
-        return response.status(404).json({ error: 'imagem não encontrada.' });
+      
+      if (imagemExiste) {
+        const novaImagem = await prisma.imagem.update({
+          where: {
+            idImagem: idImagem
+          },
+          data: {
+            imagem: imagem
+          }
+        });
+        return response.json(novaImagem);
+      
+      } else {
+        return response.status(404).json({ "error": 'imagem não encontrada.' });
       }
-      return response.json(novaImagem);
     } else {
       return response.status(400).json({"message": "Nada foi modificado"})
     }
   }catch(error){
     console.error('ocorreu um erro:', error);
-    return response.status(500).json({error: 'occoreu um erro ao modificar imagem'});
+    return response.status(500).json({"error": 'ocorreu um erro ao modificar imagem'});
   }
   });
 }

@@ -1,6 +1,5 @@
 const request = require("supertest");
-import { app } from "../server";
-const prisma = require('../prisma');
+import { app, prisma } from "../server";
 
 const idPersonagem = "32f2b3e4-01eb-452f-a36f-0c3cd796ecaf";
 let imagemIdImagem = "64517b59-ed1c-415b-8212-8c4d6ff755a2";
