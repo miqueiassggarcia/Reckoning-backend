@@ -48,6 +48,38 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     }
 });
 
+// Rota para pegar id de imagem
+app.get("/search/imagem", async (request, response) => {
+  const imagem = request.query.imagem;
+
+  if(!imagem) {
+    response.status(400).json({"message": "Dados não encontrados"})
+  } else {
+    if(typeof(imagem) == "string") {
+      try{
+        const imagemID = await prisma.imagem.findFirstOrThrow({
+          select: {
+            idImagem: true
+          },
+          where: {
+            imagem: imagem,
+          }
+        });
+
+        if (!imagemID) {
+          return response.status(404).json({ error: 'Feedback não encontrado.' });
+        }
+        return response.json(imagemID);
+      }catch(error){
+        console.error('ocorreu um erro:', error);
+        return response.status(500).json({error: 'occoreu um erro ao procurar a imagem'});
+      }
+    } else {
+      response.status(400).json({"message": "Formato de dados incompativel"})
+    }
+  }
+});
+
 // Rota para pegar todas as Imagens
   app.get("/imagem/", async (request, response) => {
     try{
