@@ -23,6 +23,15 @@ describe("Testar rota post de personagem", () => {
 });
 
 
+describe("Testar rota para pegar id pelos dados", () => {
+  it("Deve retornar um id do personagem correspondente", async () => {
+    const res = await request(app).get(`/search/personagem?imagemIdImagem=${imagemIdImagem}&nome=${nome}&descricao=${descricao}`)
+    expect(res.statusCode).toBe(200);
+    expect(res.body.idPersonagem).toBe(`${idPersonagem}`);
+  });
+});
+
+
 describe("Testar rota get de 1 personagem", () => {
   it("Deve responder um personagem", async () => {
     const res = await request(app).get(`/personagem/${idPersonagem}`);
