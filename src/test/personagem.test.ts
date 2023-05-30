@@ -25,7 +25,19 @@ describe("Testar rota post de personagem", () => {
             .post('/personagem')
             .send({});
         expect(res.statusCode).toBe(400);
-        expect(res.body).toHaveProperty('message', 'Nada foi cadastrado');
+        expect(res.body).toHaveProperty('error', 'Dados invalidos.');
+    });
+    it('Deve retornar status 500 em caso de erro interno', async () => {
+        // Simulando um erro interno no servidor
+        jest.spyOn(prisma.personagem, 'create').mockRejectedValueOnce(new Error('Erro interno'));
+        const res = await request(app).post(`/personagem/`)
+        .send({
+            "imagemIdImagem": `${imagemIdImagem}`,
+            "nome": `${nome}`,
+            "descricao": `${descricao}`
+        });
+        expect(res.statusCode).toBe(500);
+        expect(res.body).toHaveProperty('error', 'ocorreu um erro ao cadastrar personagem');
     });
 });
 
@@ -42,14 +54,14 @@ describe("Testar rota get de 1 personagem", () => {
         let idPersonagemm = "341c-8cb4-4fb9";
         const res = await request(app).get(`/personagem/${idPersonagemm}`); 
         expect(res.statusCode).toBe(404);
-        expect(res.body).toHaveProperty('error', 'personagem não encontrado.');
+        expect(res.body).toHaveProperty('error', 'Personagem não encontrado.');
         });
     it('Deve retornar status 500 em caso de erro interno', async () => {
         // Simulando um erro interno no servidor
-        jest.spyOn(prisma.personagem, 'findUniqueOrThrow').mockRejectedValueOnce(new Error('Erro interno'));
+        jest.spyOn(prisma.personagem, 'findUnique').mockRejectedValueOnce(new Error('Erro interno'));
         const res = await request(app).get(`/personagem/${idPersonagem}`);
         expect(res.statusCode).toBe(500);
-        expect(res.body).toHaveProperty('error', 'occoreu um erro ao procurar personagem');
+        expect(res.body).toHaveProperty('error', 'ocorreu um erro ao buscar personagem');
     });
 });
 
@@ -63,9 +75,9 @@ describe("Testar rota get de listar todos os personagens", () => {
     it('Deve retornar status 500 em caso de erro interno', async () => {
         // Simulando um erro interno no servidor
         jest.spyOn(prisma.personagem, 'findMany').mockRejectedValueOnce(new Error('Erro interno'));
-        const res = await request(app).get(`/personagem/${idPersonagem}`);
+        const res = await request(app).get(`/personagem`);
         expect(res.statusCode).toBe(500);
-        expect(res.body).toHaveProperty('error', 'occoreu um erro ao procurar personagens');
+        expect(res.body).toHaveProperty('error', 'ocorreu um erro ao buscar personagens');
     });
 });
 
@@ -89,21 +101,31 @@ describe("Testar rota de atualizar personagem", () => {
     });
     it('Deve retornar status 404 para um personagem inexistente', async () => {
         let idPersonagemm = "341c-8cb4-4fb9";
-        const res = await request(app).put(`/personagem/${idPersonagemm}`); 
+        const res = await request(app).put(`/personagem/${idPersonagemm}`)
+        .send({
+            "imagemIdImagem": `${imagemIdImagem}`,
+            "nome": `${nome}`,
+            "descricao": `${descricao}`
+        }); 
         expect(res.statusCode).toBe(404);
-        expect(res.body).toHaveProperty('error', 'personagem não encontrado.');
+        expect(res.body).toHaveProperty('error', 'Personagem não encontrado.');
     });
     it('Deve retornar status 400 se nada for modificado', async () => {
         const res = await request(app).put(`/personagem/${idPersonagem}`).send({});
         expect(res.statusCode).toBe(400);
-        expect(res.body).toHaveProperty('message', 'Nada foi modificado');
+        expect(res.body).toHaveProperty('error', 'Nada foi modificado');
     });
     it('Deve retornar status 500 em caso de erro interno', async () => {
         // Simulando um erro interno no servidor
-        jest.spyOn(prisma.item, 'update').mockRejectedValueOnce(new Error('Erro interno'));
-        const res = await request(app).put(`/personagem/${idPersonagem}`);
+        jest.spyOn(prisma.personagem, 'findUnique').mockRejectedValueOnce(new Error('Erro interno'));
+        const res = await request(app).put(`/personagem/${idPersonagem}`)
+        .send({
+            "imagemIdImagem": `${imagemIdImagem}`,
+            "nome": `${nome}`,
+            "descricao": `${descricao}`
+        });
         expect(res.statusCode).toBe(500);
-        expect(res.body).toHaveProperty('error', 'occoreu um erro ao atualizar personagem');
+        expect(res.body).toHaveProperty('error', 'ocorreu um erro ao atualizar personagem');
     });
 });
 
@@ -121,13 +143,13 @@ describe("Testar rota de deletar personagem", () => {
         let idPersonagemm= "341c-8cb4-4fb9";
         const res = await request(app).delete(`/personagem/${idPersonagemm}`); 
         expect(res.statusCode).toBe(404);
-        expect(res.body).toHaveProperty('error', 'personagem não encontrado.');
+        expect(res.body).toHaveProperty('error', 'Personagem não encontrado.');
     });
     it('Deve retornar status 500 em caso de erro interno', async () => {
         // Simulando um erro interno no servidor
-        jest.spyOn(prisma.item, 'delete').mockRejectedValueOnce(new Error('Erro interno'));
+        jest.spyOn(prisma.personagem, 'findUnique').mockRejectedValueOnce(new Error('Erro interno'));
         const res = await request(app).delete(`/personagem/${idPersonagem}`);
         expect(res.statusCode).toBe(500);
-        expect(res.body).toHaveProperty('error', 'occoreu um erro ao deletar personagem');
+        expect(res.body).toHaveProperty('error', 'ocorreu um erro ao deletar personagem');
     });
 });
