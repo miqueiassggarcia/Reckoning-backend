@@ -53,6 +53,42 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     }
   });
 
+  // Rota para pegar id de feedback
+  app.get("/search/item", async (request, response) => {
+    const imagemIdimagem = request.query.imagemIdImagem;
+    const nome = request.query.nome;
+    const descricao = request.query.descricao;
+
+    if(!imagemIdimagem || !nome || !descricao) {
+      response.status(400).json({"message": "Dados não encontrados"})
+    } else {
+      if(typeof(imagemIdimagem) == "string" && typeof(nome) == "string" && typeof(descricao) == "string") {
+        try{
+          const itemID = await prisma.item.findFirstOrThrow({
+            select: {
+              idItem: true
+            },
+            where: {
+              imagemIdImagem: imagemIdimagem,
+              nome: nome,
+              descricao: descricao
+            }
+          });
+
+          if (!itemID) {
+            return response.status(404).json({ error: 'Feedback não encontrado.' });
+          }
+          return response.json(itemID);
+        }catch(error){
+          console.error('ocorreu um erro:', error);
+          return response.status(500).json({error: 'occoreu um erro ao procurar o item'});
+        }
+      } else {
+        response.status(400).json({"message": "Formato de dados incompativel"})
+      }
+    }
+  });
+
   // Rota para pegar todos os itens
   app.get("/item/", async (request, response) => {
     try{
