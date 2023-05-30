@@ -127,7 +127,7 @@ describe("Testar rota de deletar item", () => {
     it('Deve retornar status 500 em caso de erro interno', async () => {
         // Simulando um erro interno no servidor
         jest.spyOn(prisma.item, 'delete').mockRejectedValueOnce(new Error('Erro interno'));
-        const res = await request(app).delete(`/imagem/${idItem}`);
+        const res = await request(app).delete(`/item/${idItem}`);
         expect(res.statusCode).toBe(500);
         expect(res.body).toHaveProperty('error', 'occoreu um erro ao deletar item');
     });
