@@ -24,7 +24,7 @@ describe("Testar rota post de itens", () => {
 
 
 describe("Testar rota para pegar id pelos dados", () => {
-  it("Deve criar um id do item correspondente", async () => {
+  it("Deve retornar um id do item correspondente", async () => {
     const res = await request(app).get(`/search/item?imagemIdImagem=${imagemIdImagem}&nome=${nome}&descricao=${descricao}`)
     expect(res.statusCode).toBe(200);
     expect(res.body.idItem).toBe(`${idItem}`);

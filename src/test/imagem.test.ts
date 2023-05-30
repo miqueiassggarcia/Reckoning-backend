@@ -18,7 +18,7 @@ describe("Testar rota post de imagem", () => {
 
 
 describe("Testar rota para pegar id pelos dados", () => {
-  it("Deve criar um id da imagem correspondente", async () => {
+  it("Deve retornar um id da imagem correspondente", async () => {
     const res = await request(app).get(`/search/imagem?imagem=${imagem}`)
     expect(res.statusCode).toBe(200);
     expect(res.body.idImagem).toBe(`${idImagem}`);

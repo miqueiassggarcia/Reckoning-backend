@@ -27,6 +27,15 @@ describe("Testar rota post de versao", () => {
 });
 
 
+describe("Testar rota para pegar id pelos dados", () => {
+  it("Deve retornar um id da versao correspondente", async () => {
+    const res = await request(app).get(`/search/versao?nome=${nome}&descricao=${descricao}&data=${data}&arquivo=${arquivo}`)
+    expect(res.statusCode).toBe(200);
+    expect(res.body.idVersao).toBe(`${idVersao}`);
+  });
+});
+
+
 describe("Testar rota get de uma versao", () => {
   it("Deve responder uma versao", async () => {
     const res = await request(app).get(`/versao/${idVersao}`);

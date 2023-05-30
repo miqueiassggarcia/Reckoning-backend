@@ -56,6 +56,44 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       return response.status(500).json({error: 'occoreu um erro ao buscar a versão'});
     }
 });
+
+  // Rota para pegar id de versao
+  app.get("/search/versao", async (request, response) => {
+    const nome = request.query.nome;
+    const descricao = request.query.descricao;
+    const data = request.query.data;
+    const arquivo = request.query.arquivo;
+
+    if(!nome || !descricao || !data || !arquivo) {
+      response.status(400).json({"message": "Dados não encontrados"})
+    } else {
+      if(typeof(nome) == "string" && typeof(descricao) == "string" && typeof(data) == "string" && typeof(arquivo) == "string") {
+        try{
+          const versaoID = await prisma.versao.findFirstOrThrow({
+            select: {
+              idVersao: true
+            },
+            where: {
+              nome: nome,
+              descricao: descricao,
+              data: data,
+              arquivo: arquivo
+            }
+          });
+
+          if (!versaoID) {
+            return response.status(404).json({ error: 'Feedback não encontrado.' });
+          }
+          return response.json(versaoID);
+        }catch(error){
+          console.error('ocorreu um erro:', error);
+          return response.status(500).json({error: 'occoreu um erro ao procurar a versão'});
+        }
+      } else {
+        response.status(400).json({"message": "Formato de dados incompativel"})
+      }
+    }
+  });
   
   // Rota para pegar todas as versões(acho que nem precisa)
   app.get("/versao/", async (request, response) => {
