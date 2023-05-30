@@ -1,5 +1,5 @@
 const request = require("supertest");
-import { app, server } from "../server";
+import { app } from "../server";
 
 const idPersonagem = "32f2b3e4-01eb-452f-a36f-0c3cd796ecaf";
 let imagemIdImagem = "64517b59-ed1c-415b-8212-8c4d6ff755a2";
@@ -22,7 +22,6 @@ describe("Testar rota post de personagem", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota get de 1 personagem", () => {
   it("Deve responder um personagem", async () => {
@@ -34,7 +33,6 @@ describe("Testar rota get de 1 personagem", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota get de listar todos os personagens", () => {
   it("Deve listar todos os personagens", async () => {
@@ -44,11 +42,11 @@ describe("Testar rota get de listar todos os personagens", () => {
   });
 });
 
-server.close();
 
 imagemIdImagem = "857b3062-bb7a-458d-8587-d0e4e2c13f6e";
 nome = "Luizin";
 descricao = "Apenas luizin";
+
 
 describe("Testar rota de atualizar personagem", () => {
   it("Deve atualizar o personagem solicitado", async () => {
@@ -64,7 +62,6 @@ describe("Testar rota de atualizar personagem", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota de deletar personagem", () => {
   it("Deve deletar o personagem solicitado", async () => {
@@ -76,5 +73,3 @@ describe("Testar rota de deletar personagem", () => {
     expect(res.body.descricao).toBe(`${descricao}`);
   });
 });
-
-server.close();

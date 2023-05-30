@@ -1,5 +1,5 @@
 const request = require("supertest");
-import { app, server } from "../server";
+import { app } from "../server";
 
 const idImagem = "1664c23d-d9bc-4322-8cab-27a755d06dbc";
 let imagem = "https://reckoning-image";
@@ -16,7 +16,6 @@ describe("Testar rota post de imagem", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota get de uma imagem", () => {
   it("Deve responder uma imagem", async () => {
@@ -26,7 +25,6 @@ describe("Testar rota get de uma imagem", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota get de listar todas as imagens", () => {
   it("Deve listar todas as imagens", async () => {
@@ -36,9 +34,9 @@ describe("Testar rota get de listar todas as imagens", () => {
   });
 });
 
-server.close();
 
 imagem = "https://Reckoning-image-home"
+
 
 describe("Testar rota de atualizar a imagem", () => {
   it("Deve atualizar a imagem solicitada", async () => {
@@ -51,7 +49,6 @@ describe("Testar rota de atualizar a imagem", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota de deletar a imagem", () => {
   it("Deve deletar a imagem solicitada", async () => {
@@ -61,5 +58,3 @@ describe("Testar rota de deletar a imagem", () => {
     expect(res.body.imagem).toBe(`${imagem}`);
   });
 });
-
-server.close();

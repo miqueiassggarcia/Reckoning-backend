@@ -1,5 +1,5 @@
 const request = require("supertest");
-import { app, server } from "../server";
+import { app } from "../server";
 
 const currentDateTime = new Date();
 const idVersao = "3cdd9c6f-23f7-4841-9c3b-066b08043af5";
@@ -26,7 +26,6 @@ describe("Testar rota post de versao", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota get de uma versao", () => {
   it("Deve responder uma versao", async () => {
@@ -39,7 +38,6 @@ describe("Testar rota get de uma versao", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota get de listar as versoes", () => {
   it("Deve listar todas as versoes", async () => {
@@ -49,12 +47,12 @@ describe("Testar rota get de listar as versoes", () => {
   });
 });
 
-server.close();
 
 nome = "Update do boss aranha"
 descricao = "Adiciona um boss aranha na fase final"
 data = currentDateTime.toISOString();
 arquivo = "https://reckoning-version1.1.2"
+
 
 describe("Testar rota de atualizar a versao", () => {
   it("Deve atualizar a versao", async () => {
@@ -74,7 +72,6 @@ describe("Testar rota de atualizar a versao", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota de deletar feedback", () => {
   it("Deve deletar o feedback solicitado", async () => {
@@ -87,5 +84,3 @@ describe("Testar rota de deletar feedback", () => {
     expect(res.body.arquivo).toBe(`${arquivo}`);
   });
 });
-
-server.close();

@@ -1,5 +1,5 @@
 const request = require("supertest");
-import { app, server } from "../server";
+import { app } from "../server";
 
 const idFeedback = "3278a41c-8cb4-4fb9-b944-0422b40a8815";
 let atribuicao = "Site";
@@ -19,7 +19,6 @@ describe("Testar rota post de feedback", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota get de 1 feedback", () => {
   it("Deve responder um feedback", async () => {
@@ -30,7 +29,6 @@ describe("Testar rota get de 1 feedback", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota get de listar todos os feedbacks", () => {
   it("Deve listar todos os feedbacks", async () => {
@@ -40,10 +38,10 @@ describe("Testar rota get de listar todos os feedbacks", () => {
   });
 });
 
-server.close();
 
 atribuicao = "Jogo"
 feedback = "Muito legal"
+
 
 describe("Testar rota de atualizar feedback", () => {
   it("Deve atualizar o feedback solicitado", async () => {
@@ -57,7 +55,6 @@ describe("Testar rota de atualizar feedback", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota de deletar feedback", () => {
   it("Deve deletar o feedback solicitado", async () => {
@@ -68,5 +65,3 @@ describe("Testar rota de deletar feedback", () => {
     expect(res.body.feedback).toBe(`${feedback}`);
   });
 });
-
-server.close();

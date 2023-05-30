@@ -1,5 +1,5 @@
 const request = require("supertest");
-import { app, server } from "../server";
+import { app } from "../server";
 
 const idItem = "d29d380b-99b4-48aa-93cf-3695570cf511";
 let imagemIdImagem = "64517b59-ed1c-415b-8212-8c4d6ff755a2";
@@ -22,7 +22,6 @@ describe("Testar rota post de itens", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota get de 1 item", () => {
   it("Deve responder um item", async () => {
@@ -34,7 +33,6 @@ describe("Testar rota get de 1 item", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota get de listar todos os itens", () => {
   it("Deve listar todos os itens", async () => {
@@ -44,11 +42,11 @@ describe("Testar rota get de listar todos os itens", () => {
   });
 });
 
-server.close();
 
 imagemIdImagem = "857b3062-bb7a-458d-8587-d0e4e2c13f6e";
 nome = "Handgun";
 descricao = "Pistola";
+
 
 describe("Testar rota de atualizar item", () => {
   it("Deve atualizar o item solicitado", async () => {
@@ -64,7 +62,6 @@ describe("Testar rota de atualizar item", () => {
   });
 });
 
-server.close();
 
 describe("Testar rota de deletar item", () => {
   it("Deve deletar o item solicitado", async () => {
@@ -76,5 +73,3 @@ describe("Testar rota de deletar item", () => {
     expect(res.body.descricao).toBe(`${descricao}`);
   });
 });
-
-server.close();
