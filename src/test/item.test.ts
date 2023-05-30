@@ -19,14 +19,26 @@ describe("Testar rota post de itens", () => {
         expect(res.body.imagemIdImagem).toBe(`${imagemIdImagem}`);
         expect(res.body.nome).toBe(`${nome}`);
         expect(res.body.descricao).toBe(`${descricao}`);
+    });
+    it('Deve retornar status 400 se nada for cadastrado', async () => {
+        const res = await request(app)
+            .post('/item')
+            .send({});
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("error", 'dados inválidos');
+    });
+    it('Deve retornar status 500 em caso de erro interno', async () => {
+        // Simulando um erro interno no servidor
+        jest.spyOn(prisma.item, 'create').mockRejectedValueOnce(new Error('Erro interno'));
+        const res = await request(app).post(`/item/`).send({
+            "idItem": `${idItem}`,
+            "imagemIdImagem": `${imagemIdImagem}`,
+            "nome": `${nome}`,
+            "descricao": `${descricao}`
         });
-        it('Deve retornar status 400 se nada for cadastrado', async () => {
-            const res = await request(app)
-                .post('/item')
-                .send({});
-            expect(res.statusCode).toBe(400);
-            expect(res.body).toHaveProperty("error", 'ocorreu um erro ao cadastrar item');
-        });
+        expect(res.statusCode).toBe(500);
+        expect(res.body).toHaveProperty("error", "ocorreu um erro ao cadastrar o item");
+    });
 });
 
 

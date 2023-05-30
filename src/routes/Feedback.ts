@@ -12,17 +12,23 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         feedback,
       } = FeedbackSchema.parse(request.body);
 
-      const feedbacks = await prisma.feedback.create({
-        data: {
-          idFeedback: idFeedback,
-          atribuicao: atribuicao,
-          feedback: feedback
-        }
-      });
-      return response.status(201).json(feedbacks);
+      try {
+        const feedbacks = await prisma.feedback.create({
+          data: {
+            idFeedback: idFeedback,
+            atribuicao: atribuicao,
+            feedback: feedback
+          }
+        });
+
+        return response.status(201).json(feedbacks);
+      } catch(error) {
+        console.error("ocorreu um erro:", error);
+        return response.status(500).json({"error": "ocorreu um erro ao cadastrar a imagem"})
+      }
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(400).json({"error": "ocorreu um erro ao cadastrar o feedback"});
+      return response.status(400).json({"error": 'dados inválidos'});
     }
   });
 

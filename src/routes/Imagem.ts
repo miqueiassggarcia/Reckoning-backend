@@ -11,17 +11,22 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         imagem
       } = ImagemSchema.parse(request.body);
 
-      const novaImagem = await prisma.imagem.create({
-        data: {
-          idImagem: idImagem,
-          imagem: imagem
-        }
-      });
+      try {
+        const novaImagem = await prisma.imagem.create({
+          data: {
+            idImagem: idImagem,
+            imagem: imagem
+          }
+        });
 
-      return response.status(201).json(novaImagem);
+        return response.status(201).json(novaImagem);
+      } catch(error) {
+        console.error("ocorreu um erro:", error);
+        return response.status(500).json({"error": "ocorreu um erro ao cadastrar a imagem"})
+      }
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(400).json({"error": 'ocorreu um erro ao inserir imagem'});
+      return response.status(400).json({"error": 'dados inválidos'});
     }
 });
 

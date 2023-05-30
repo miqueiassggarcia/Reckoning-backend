@@ -22,7 +22,18 @@ describe("Testar rota post de feedback", () => {
             .post('/feedback')
             .send({});
         expect(res.statusCode).toBe(400);
-        expect(res.body).toHaveProperty('error', 'ocorreu um erro ao cadastrar o feedback');
+        expect(res.body).toHaveProperty("error", 'dados inválidos');
+    });
+    it('Deve retornar status 500 em caso de erro interno', async () => {
+        // Simulando um erro interno no servidor
+        jest.spyOn(prisma.item, 'create').mockRejectedValueOnce(new Error('Erro interno'));
+        const res = await request(app).post(`/feedback/`).send({
+            "idFeedback": `${idFeedback}`,
+            "atribuicao": `${atribuicao}`,
+            "feedback": `${feedback}`
+        });
+        expect(res.statusCode).toBe(500);
+        expect(res.body).toHaveProperty("error", "ocorreu um erro ao cadastrar a imagem");
     });
 });
 

@@ -13,18 +13,23 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         descricao
       } = ItensSchema.parse(request.body)
 
-      const novoItem = await prisma.item.create({
-        data: {
-          idItem: idItem,
-          imagemIdImagem: imagemIdImagem,
-          nome: nome,
-          descricao: descricao
-        }
-      });
-      return response.status(201).json(novoItem);
+      try {
+        const novoItem = await prisma.item.create({
+          data: {
+            idItem: idItem,
+            imagemIdImagem: imagemIdImagem,
+            nome: nome,
+            descricao: descricao
+          }
+        });
+        return response.status(201).json(novoItem);
+      } catch(error) {
+        console.error("ocorreu um erro:", error);
+        return response.status(500).json({"error": "ocorreu um erro ao cadastrar o item"})
+      }
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(400).json({"error": 'ocorreu um erro ao cadastrar item'});
+      return response.status(400).json({"error": 'dados inválidos'});
     }
 });
 

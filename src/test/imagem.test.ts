@@ -19,7 +19,17 @@ describe("Testar rota post de imagem", () => {
             .post('/imagem')
             .send({});
         expect(res.statusCode).toBe(400);
-        expect(res.body).toHaveProperty("error", 'ocorreu um erro ao inserir imagem');
+        expect(res.body).toHaveProperty("error", 'dados inválidos');
+    });
+    it('Deve retornar status 500 em caso de erro interno', async () => {
+        // Simulando um erro interno no servidor
+        jest.spyOn(prisma.item, 'create').mockRejectedValueOnce(new Error('Erro interno'));
+        const res = await request(app).post(`/imagem/`).send({
+            "idImagem": `${idImagem}`,
+            "imagem": `${imagem}`
+        });
+        expect(res.statusCode).toBe(500);
+        expect(res.body).toHaveProperty("error", "ocorreu um erro ao cadastrar a imagem");
     });
 });
 
