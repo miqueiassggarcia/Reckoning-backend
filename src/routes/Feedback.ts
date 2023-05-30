@@ -54,7 +54,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
   // Rota para pegar id de feedback
   app.get("/search/feedback", async (request, response) => {
-    const atribuicao = request.query.atribuicao!;
+    const atribuicao = request.query.atribuicao;
     const feedback = request.query.feedback;
 
     if(!atribuicao || !feedback) {

@@ -20,6 +20,15 @@ describe("Testar rota post de feedback", () => {
 });
 
 
+describe("Testar rota para pegar id pelos dados", () => {
+  it("Deve criar um id do feedback correspondente", async () => {
+    const res = await request(app).get(`/search/feedback?atribuicao=${atribuicao}&feedback=${feedback}`)
+    expect(res.statusCode).toBe(200);
+    expect(res.body.idFeedback).toBe(`${idFeedback}`);
+  });
+});
+
+
 describe("Testar rota get de 1 feedback", () => {
   it("Deve responder um feedback", async () => {
     const res = await request(app).get(`/feedback/${idFeedback}`);
