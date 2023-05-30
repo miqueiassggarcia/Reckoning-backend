@@ -1,5 +1,6 @@
 const request = require("supertest");
 import { app } from "../server";
+const prisma = require('../prisma'); 
 
 const idImagem = "1664c23d-d9bc-4322-8cab-27a755d06dbc";
 let imagem = "https://reckoning-image";
