@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Express } from "express";
 import CryptoJS from "crypto-js";
-import { singupSchema } from "../validation/Login";
+import { singinSchema, singupSchema } from "../validation/Login";
 
 module.exports = (app: Express, prisma: PrismaClient) => {
   // Rota de cadastro de usuário
@@ -70,6 +70,35 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       }
 
       response.json(usuario);
+    } catch(error) {
+      //console.error("ocorreu um erro:", error);
+      response.status(500).json({"error": "ocorreu um erro ao encontrar usuário"})
+    }
+  })
+
+  // Rota para validar usuário
+  app.post("/singin", async (request, response) => {
+    const { email, password } = singinSchema.parse(request.body);
+
+    try {
+      const usuario = await prisma.usuario.findUnique({
+        select: {
+          hash: true
+        },
+        where: {
+          email: email
+        }
+      })
+
+      if(usuario) {
+        if(usuario.hash === CryptoJS.SHA256(password).toString()) {
+          return response.json({ "validate": true })
+        } else {
+          return response.status(401).json({ "validate": false })
+        }
+      } else {
+        response.status(404).json({"error": "Usuário não encontrado"});
+      }
     } catch(error) {
       //console.error("ocorreu um erro:", error);
       response.status(500).json({"error": "ocorreu um erro ao encontrar usuário"})
