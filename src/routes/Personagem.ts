@@ -58,7 +58,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     }
   });
 
-  // Rota para pegar id de feedback
+  // Rota para pegar id de personagem
   app.get("/search/personagem", async (request, response) => {
     const imagemIdimagem = request.query.imagemIdImagem;
     const nome = request.query.nome;
