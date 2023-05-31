@@ -104,4 +104,76 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       response.status(500).json({"error": "ocorreu um erro ao encontrar usuário"})
     }
   })
+
+  // Rota de deletar usuário
+  app.delete("/usuario/:id", async (request, response) => {
+    try{
+      const idUsuario = request.params.id;
+
+      const usuarioExiste = await prisma.usuario.findUnique({
+        where: {
+          idUsuario: idUsuario
+        }
+      });
+
+      if (usuarioExiste) {
+        const usuario = await prisma.usuario.delete({
+          select: {
+            idUsuario: true,
+            nome: true,
+            email: true
+          },
+          where:{
+            idUsuario: idUsuario
+          }
+        });
+
+        return response.status(200).json(usuario);
+      }
+      else{
+        return response.status(404).json({ "error": 'usuário não encontrado.' });
+      }
+    }catch(error){
+      //console.error('ocorreu um erro:', error);
+      return response.status(500).json({"error": 'ocorreu um erro ao deletar usuário'});
+    }
+  });
+
+//   // Rota para atualizar imagem
+//   app.put("/personagem/:id", async (request, response) => {
+//     try{
+//       const { descricao, imagemIdImagem, nome } = PersonagemSchema.partial().parse(request.body);
+
+//       if(descricao || imagemIdImagem || nome) {
+//         const idPersonagem = request.params.id;
+
+//         const novoPersonagem = await prisma.personagem.findUnique({
+//           where: {
+//             idPersonagem: idPersonagem
+//           }
+//         });
+//         if (novoPersonagem) {
+//           const personagem = await prisma.personagem.update({
+//             where: {
+//               idPersonagem: idPersonagem
+//             },
+//             data: {
+//               imagemIdImagem: imagemIdImagem,
+//               descricao: descricao,
+//               nome: nome
+//             }
+//           });
+//           return response.status(200).json(personagem);
+//         }
+//         if(!novoPersonagem){
+//           return response.status(404).json({ "error": 'Personagem não encontrado.' });
+//         }
+//       } else {
+//         return response.status(400).json({"error": "Nada foi modificado"})
+//       }
+//     }catch(error){
+//       //console.error('ocorreu um erro:', error);
+//       return response.status(500).json({"error": 'ocorreu um erro ao atualizar personagem'});
+//     }
+//   });
 }

@@ -45,4 +45,15 @@ describe("Testando login", () => {
         expect(res.body.validate).toBe(true);
     });
   });
+
+
+  describe("Testar rota de deletar usuário", () => {
+    it("Deve deletar o usuário solicitado", async () => {
+        const res = await request(app).delete(`/usuario/${idUsuario}`);
+        expect(res.statusCode).toBe(200);
+        expect(res.body.idUsuario).toBe(`${idUsuario}`);
+        expect(res.body.nome).toBe(`${nome}`);
+        expect(res.body.email).toBe(`${email}`);
+    });
+  });
 });
