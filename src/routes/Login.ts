@@ -29,15 +29,15 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
           return response.status(201).json(usuario)
         } catch(error) {
-          console.error("ocorreu um erro ao cadastrar usuário", error);
+          //console.error("ocorreu um erro ao cadastrar usuário", error);
           response.status(500).json({"error": "ocorreu um erro ao cadastrar usuário"})
         }
       } else {
-        console.error("Usuário já existe")
+        //console.error("Usuário já existe")
         response.status(409).json({"error": "Email já usado, não é possível criar o usuário"})
       }
     } catch(error) {
-      console.error("ocorreu um erro ao cadastrar usuário", error);
+      //console.error("ocorreu um erro ao cadastrar usuário", error);
       response.status(500).json({"error": "ocorreu um erro ao cadastrar usuário"})
     }
   })

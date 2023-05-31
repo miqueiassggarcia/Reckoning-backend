@@ -5,7 +5,7 @@ export const app = express();
 app.use(express.json());
 
 export const prisma = new PrismaClient({
-  log:["query"]
+  log: process.env.NODE_ENV !== 'test' ? ['query'] : []
 });
 
 require("./routes/Versao")(app, prisma)

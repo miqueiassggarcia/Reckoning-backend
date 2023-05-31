@@ -23,11 +23,11 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
         return response.status(201).json(feedbacks);
       } catch(error) {
-        console.error("ocorreu um erro:", error);
+        //console.error("ocorreu um erro:", error);
         return response.status(500).json({"error": "ocorreu um erro ao cadastrar a imagem"})
       }
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(400).json({"error": 'dados inválidos'});
     }
   });
@@ -52,7 +52,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       }
       return response.json(feedback);
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao procurar o feedback'});
     }
   });
@@ -83,7 +83,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
           }
           return response.json(feedbackID);
         }catch(error){
-          console.error('ocorreu um erro:', error);
+          //console.error('ocorreu um erro:', error);
           return response.status(500).json({error: 'occoreu um erro ao procurar o feedback'});
         }
       } else {
@@ -104,7 +104,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       });
       return response.status(200).json(feedbacks);
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao procurar os feedbacks'});
     }
   });
@@ -133,7 +133,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       }
 
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({error: 'occoreu um erro ao deletar o feedback'});
     }
   });
@@ -171,7 +171,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         return response.status(400).json({"message": "Nada foi modificado"})
       }
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({error: 'occoreu um erro ao atualizar o feedback'});
     }
   });

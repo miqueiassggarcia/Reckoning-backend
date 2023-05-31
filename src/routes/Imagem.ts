@@ -21,11 +21,11 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
         return response.status(201).json(novaImagem);
       } catch(error) {
-        console.error("ocorreu um erro:", error);
+        //console.error("ocorreu um erro:", error);
         return response.status(500).json({"error": "ocorreu um erro ao cadastrar a imagem"})
       }
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(400).json({"error": 'dados inválidos'});
     }
 });
@@ -50,7 +50,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
       return response.json(imagem);
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao buscar imagem'});
     }
 });
@@ -78,7 +78,7 @@ app.get("/search/imagem", async (request, response) => {
         }
         return response.json(imagemID);
       }catch(error){
-        console.error('ocorreu um erro:', error);
+        //console.error('ocorreu um erro:', error);
         return response.status(500).json({error: 'occoreu um erro ao procurar a imagem'});
       }
     } else {
@@ -97,7 +97,7 @@ app.get("/search/imagem", async (request, response) => {
       });
       return response.json(imagem);
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'occoreu um erro ao buscar imagens'});
     }
 });
@@ -125,7 +125,7 @@ app.get("/search/imagem", async (request, response) => {
         return response.status(404).json({ error: 'imagem não encontrada.' });
       }
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({error: 'occoreu um erro ao deletar imagem'});
     }
 });
@@ -162,7 +162,7 @@ app.get("/search/imagem", async (request, response) => {
       return response.status(400).json({"message": "Nada foi modificado"})
     }
   }catch(error){
-    console.error('ocorreu um erro:', error);
+    //console.error('ocorreu um erro:', error);
     return response.status(500).json({"error": 'ocorreu um erro ao modificar imagem'});
   }
   });

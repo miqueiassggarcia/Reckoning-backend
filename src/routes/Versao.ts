@@ -26,11 +26,11 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       });
       return response.status(201).json(versao);
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao cadastrar versão'});
     }
     }catch(error){
-    console.error('ocorreu um erro:', error);
+    //console.error('ocorreu um erro:', error);
     return response.status(400).json({"error": 'Dados invalidos.'});
   }
 });
@@ -56,7 +56,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       }
       return response.json(versao);
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({error: 'occoreu um erro ao buscar a versão'});
     }
 });
@@ -90,7 +90,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
           }
           return response.json(versaoID);
         }catch(error){
-          console.error('ocorreu um erro:', error);
+          //console.error('ocorreu um erro:', error);
           return response.status(500).json({error: 'occoreu um erro ao procurar a versão'});
         }
       } else {
@@ -112,7 +112,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       });
       return response.status(200).json(versao);
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao buscar as versões'});
     }
 });
@@ -139,7 +139,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         return response.status(404).json({"error": 'Versão não encontrada.'})
       }
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao deletar a versão'});
     }
 });
@@ -177,7 +177,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         return response.status(400).json({"message": "Nada foi modificado"})
       }
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao modificar a versão'});
     }
 });

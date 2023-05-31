@@ -24,11 +24,11 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       });
       return response.status(201).json(personagem);
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao cadastrar personagem'});
     }
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(400).json({"error": 'Dados invalidos.'});
     }
 });
@@ -53,7 +53,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       }
       return response.json(personagem);
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao buscar personagem'});
     }
   });
@@ -85,7 +85,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
           }
           return response.json(personagemID);
         }catch(error){
-          console.error('ocorreu um erro:', error);
+          //console.error('ocorreu um erro:', error);
           return response.status(500).json({error: 'occoreu um erro ao procurar o personagem'});
         }
       } else {
@@ -106,7 +106,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       });
       return response.status(200).json(personagens);
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao buscar personagens'});
     }
   });
@@ -133,7 +133,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         return response.status(404).json({ "error": 'Personagem não encontrado.' });
       }
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao deletar personagem'});
     }
   });
@@ -171,7 +171,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         return response.status(400).json({"error": "Nada foi modificado"})
       }
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao atualizar personagem'});
     }
   });

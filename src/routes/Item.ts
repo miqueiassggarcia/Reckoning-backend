@@ -24,11 +24,11 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         });
         return response.status(201).json(novoItem);
       } catch(error) {
-        console.error("ocorreu um erro:", error);
+        //console.error("ocorreu um erro:", error);
         return response.status(500).json({"error": "ocorreu um erro ao cadastrar o item"})
       }
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(400).json({"error": 'dados inválidos'});
     }
 });
@@ -53,7 +53,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       }
       return response.json(item);
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao procurar o item'});
     }
   });
@@ -85,7 +85,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
           }
           return response.json(itemID);
         }catch(error){
-          console.error('ocorreu um erro:', error);
+          //console.error('ocorreu um erro:', error);
           return response.status(500).json({error: 'occoreu um erro ao procurar o item'});
         }
       } else {
@@ -106,7 +106,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       });
       return response.json(itens);
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao procurar os itens'});
     }
 });
@@ -134,7 +134,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         return response.status(404).json({ "error": 'item não encontrado.' });
       }
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({'error': 'ocorreu um erro ao deletar o item'});
     }
   });
@@ -173,7 +173,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         return response.status(400).json({"message": "Nada foi modificado"})
       }
     }catch(error){
-      console.error('ocorreu um erro:', error);
+      //console.error('ocorreu um erro:', error);
       return response.status(500).json({"error": 'ocorreu um erro ao atualizar item'});
     }
 });
