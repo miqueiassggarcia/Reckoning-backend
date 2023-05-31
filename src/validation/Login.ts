@@ -10,5 +10,5 @@ export const singupSchema = z.object({
     .max(255, {message: "Seu endereço de email deve ter menos de 256 caracteres"}),
   password: z.string()
     .min(4, {message: "Sua senha deve ter ao menos 4 caracteres"})
-    .min(255, {message: "Sua senha deve ter menos de 256 caracteres"})
+    .max(255, {message: "Sua senha deve ter menos de 256 caracteres"})
 })

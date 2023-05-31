@@ -5,7 +5,8 @@ const idFeedback = "3278a41c-8cb4-4fb9-b944-0422b40a8815";
 let atribuicao = "Site";
 let feedback = "Muito massa";
 
-describe("Testar rota post de feedback", () => {
+describe("Testando feedbacks", () => {
+    describe("Testar rota post de feedback", () => {
     it("Deve criar um feedback", async () => {
         const res = await request(app).post("/feedback").send({
             "idFeedback": `${idFeedback}`,
@@ -150,3 +151,4 @@ describe("Testar rota de deletar feedback", () => {
         expect(res.body).toHaveProperty('error', 'occoreu um erro ao deletar o feedback');
     });
 });
+})
