@@ -48,3 +48,10 @@ model Feedback {
   atribuicao String
   feedback   String
 }
+
+model Usuario {
+  idUsuario String @id @default(uuid())
+  nome String
+  email String @unique
+  hash String
+}
