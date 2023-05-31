@@ -13,7 +13,8 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         descricao
       } = PersonagemSchema.parse(request.body);
 
-      const personagem = await prisma.personagem.create({
+      try{
+        const personagem = await prisma.personagem.create({
         data: {
           idPersonagem: idPersonagem,
           imagemIdImagem: imagemIdImagem,
@@ -24,7 +25,11 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       return response.status(201).json(personagem);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(400).json({error: 'occoreu um erro ao cadastrar o personagem'});
+      return response.status(500).json({"error": 'ocorreu um erro ao cadastrar personagem'});
+    }
+    }catch(error){
+      console.error('ocorreu um erro:', error);
+      return response.status(400).json({"error": 'Dados invalidos.'});
     }
 });
 
@@ -33,7 +38,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     try{
       const idPersonagens = request.params.id;
 
-      const personagem = await prisma.personagem.findUniqueOrThrow({
+      const personagem = await prisma.personagem.findUnique({
         select: {
           imagemIdImagem: true,
           nome: true,
@@ -44,12 +49,12 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         }
       });
       if (!personagem) {
-        return response.status(404).json({ error: 'Personagem não encontrado.' });
+        return response.status(404).json({ "error": 'Personagem não encontrado.' });
       }
       return response.json(personagem);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao buscar personagem'});
+      return response.status(500).json({"error": 'ocorreu um erro ao buscar personagem'});
     }
   });
 
@@ -99,10 +104,10 @@ module.exports = (app: Express, prisma: PrismaClient) => {
           descricao: true
         }
       });
-      return response.json(personagens);
+      return response.status(200).json(personagens);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao buscar personagens'});
+      return response.status(500).json({"error": 'ocorreu um erro ao buscar personagens'});
     }
   });
   
@@ -111,18 +116,25 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     try{
       const idPersonagem = request.params.id;
 
-      const personagem = await prisma.personagem.delete({
+      const personagemExiste = await prisma.personagem.findUnique({
         where: {
           idPersonagem: idPersonagem
         }
       });
-      if (!personagem) {
-        return response.status(404).json({ error: 'Personagem não encontrado.' });
+      if (personagemExiste) {
+        const personagem = await prisma.personagem.delete({
+          where:{
+            idPersonagem: idPersonagem
+          }
+        });
+        return response.status(200).json(personagem);
       }
-      return response.json(personagem);
+      else{
+        return response.status(404).json({ "error": 'Personagem não encontrado.' });
+      }
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao deletar personagem'});
+      return response.status(500).json({"error": 'ocorreu um erro ao deletar personagem'});
     }
   });
 
@@ -134,26 +146,33 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       if(descricao || imagemIdImagem || nome) {
         const idPersonagem = request.params.id;
 
-        const novoPersonagem = await prisma.personagem.update({
+        const novoPersonagem = await prisma.personagem.findUnique({
           where: {
             idPersonagem: idPersonagem
-          },
-          data: {
-            imagemIdImagem: imagemIdImagem,
-            descricao: descricao,
-            nome: nome
           }
         });
-        if (!novoPersonagem) {
-          return response.status(404).json({ error: 'Personagem não encontrado.' });
+        if (novoPersonagem) {
+          const personagem = await prisma.personagem.update({
+            where: {
+              idPersonagem: idPersonagem
+            },
+            data: {
+              imagemIdImagem: imagemIdImagem,
+              descricao: descricao,
+              nome: nome
+            }
+          });
+          return response.status(200).json(personagem);
         }
-        return response.json(novoPersonagem);
+        if(!novoPersonagem){
+          return response.status(404).json({ "error": 'Personagem não encontrado.' });
+        }
       } else {
-        return response.status(400).json({"message": "Nada foi modificado"})
+        return response.status(400).json({"error": "Nada foi modificado"})
       }
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao atualizar personagem'});
+      return response.status(500).json({"error": 'ocorreu um erro ao atualizar personagem'});
     }
   });
 }

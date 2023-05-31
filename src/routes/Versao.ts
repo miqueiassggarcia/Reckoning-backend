@@ -14,7 +14,8 @@ module.exports = (app: Express, prisma: PrismaClient) => {
         arquivo
       } = VersaoSchema.parse(request.body);
 
-      const versao = await prisma.versao.create({
+      try{
+        const versao = await prisma.versao.create({
         data: {
           idVersao: idVersao,
           nome: nome,
@@ -23,11 +24,14 @@ module.exports = (app: Express, prisma: PrismaClient) => {
           arquivo: arquivo
         }
       });
-
       return response.status(201).json(versao);
     }catch(error){
+      console.error('ocorreu um erro:', error);
+      return response.status(500).json({"error": 'ocorreu um erro ao cadastrar versão'});
+    }
+    }catch(error){
     console.error('ocorreu um erro:', error);
-    return response.status(400).json({error: 'occoreu um erro ao cadastrar a versão'});
+    return response.status(400).json({"error": 'Dados invalidos.'});
   }
 });
 
@@ -36,7 +40,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     try{
       const idVersao = request.params.id;
 
-      const versao = await prisma.versao.findUniqueOrThrow({
+      const versao = await prisma.versao.findUnique({
         select: {
           nome: true,
           descricao: true,
@@ -106,10 +110,10 @@ module.exports = (app: Express, prisma: PrismaClient) => {
           arquivo: true
         }
       });
-      return response.json(versao);
+      return response.status(200).json(versao);
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao buscar as versões'});
+      return response.status(500).json({"error": 'ocorreu um erro ao buscar as versões'});
     }
 });
 
@@ -118,18 +122,25 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     try{
       const idVersao = request.params.id;
 
-      const versao = await prisma.versao.delete({
+      const versaoexiste = await prisma.versao.findUnique({
         where: {
           idVersao: idVersao
         }
       });
-      if (!versao) {
-        return response.status(404).json({ error: 'Versão não encontrado.' });
+      if (versaoexiste) {
+        const versao = await prisma.versao.delete({
+          where: {
+            idVersao: idVersao
+          }
+        });
+        return response.status(200).json(versao);
       }
-      return response.status(200).json(versao);
+      else{
+        return response.status(404).json({"error": 'Versão não encontrada.'})
+      }
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao deletar a versão'});
+      return response.status(500).json({"error": 'ocorreu um erro ao deletar a versão'});
     }
 });
 
@@ -137,31 +148,37 @@ module.exports = (app: Express, prisma: PrismaClient) => {
   app.put("/versao/:id", async (request, response) => {
     try{
       const {nome, arquivo, descricao, data} = VersaoSchema.partial().parse(request.body);
-
       if(nome || arquivo || descricao || data) {
         const idVersao = request.params.id;
 
-        const versao = await prisma.versao.update({
+        const versaoexiste = await prisma.versao.findUnique({
           where: {
             idVersao: idVersao
-          },
-          data: {
-            nome: nome,
-            arquivo: arquivo,
-            data: data,
-            descricao: descricao
           }
         });
-        if (!versao) {
-          return response.status(404).json({ error: 'Versão não encontrada.' });
+        if (versaoexiste) {
+          const versao = await prisma.versao.update({
+            where: {
+              idVersao: idVersao
+            },
+            data: {
+              nome: nome,
+              arquivo: arquivo,
+              data: data,
+              descricao: descricao
+            }
+          })
+          return response.status(200).json(versao);
         }
-        return response.json(versao);
+        if (!versaoexiste){
+          return response.status(404).json({ "error": 'Versão não encontrado.' });
+        }
       } else {
         return response.status(400).json({"message": "Nada foi modificado"})
       }
     }catch(error){
       console.error('ocorreu um erro:', error);
-      return response.status(500).json({error: 'occoreu um erro ao modificar a versão'});
+      return response.status(500).json({"error": 'ocorreu um erro ao modificar a versão'});
     }
 });
 }

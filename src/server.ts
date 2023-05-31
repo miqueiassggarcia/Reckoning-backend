@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client"
 export const app = express();
 app.use(express.json());
 
-const prisma = new PrismaClient({
+export const prisma = new PrismaClient({
   log:["query"]
 });
 
