@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Express } from "express";
+import CryptoJS from "crypto-js";
 import { singupSchema } from "../validation/Login";
 
 module.exports = (app: Express, prisma: PrismaClient) => {
@@ -50,9 +51,10 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
   // Rota de pegar dados de usuário por id
   app.get("/usuario/:id", async (request, response) => {
-    const idUsuario = request.params.id;
     try {
-      const usuario = prisma.usuario.findUnique({
+      const idUsuario = request.params.id;
+
+      const usuario = await prisma.usuario.findUnique({
         select: {
           nome: true,
           email: true,
@@ -62,12 +64,12 @@ module.exports = (app: Express, prisma: PrismaClient) => {
           idUsuario: idUsuario
         }
       })
-
+      
       if(!usuario) {
         response.status(404).json({"error": "Usuário não encontrado"});
       }
 
-      response.status(200).json(usuario);
+      response.json(usuario);
     } catch(error) {
       //console.error("ocorreu um erro:", error);
       response.status(500).json({"error": "ocorreu um erro ao encontrar usuário"})
