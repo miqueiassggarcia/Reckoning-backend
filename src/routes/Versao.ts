@@ -69,11 +69,11 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     const arquivo = request.query.arquivo;
 
     if(!nome || !descricao || !data || !arquivo) {
-      response.status(400).json({"message": "Dados não encontrados"})
+      response.status(400).json({"message": "Dados imcompletos ou formato incompativel"})
     } else {
       if(typeof(nome) == "string" && typeof(descricao) == "string" && typeof(data) == "string" && typeof(arquivo) == "string") {
         try{
-          const versaoID = await prisma.versao.findFirstOrThrow({
+          const versaoID = await prisma.versao.findFirst({
             select: {
               idVersao: true
             },
@@ -86,15 +86,13 @@ module.exports = (app: Express, prisma: PrismaClient) => {
           });
 
           if (!versaoID) {
-            return response.status(404).json({ error: 'Feedback não encontrado.' });
+            return response.status(404).json({ "error": 'Versão não encontrada.' });
           }
           return response.json(versaoID);
         }catch(error){
           //console.error('ocorreu um erro:', error);
-          return response.status(500).json({error: 'occoreu um erro ao procurar a versão'});
+          return response.status(500).json({"error": 'ocorreu um erro ao procurar a versão'});
         }
-      } else {
-        response.status(400).json({"message": "Formato de dados incompativel"})
       }
     }
   });
