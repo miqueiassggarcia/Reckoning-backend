@@ -65,11 +65,11 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     const descricao = request.query.descricao;
 
     if(!imagemIdimagem || !nome || !descricao) {
-      response.status(400).json({"message": "Dados não encontrados"})
+      response.status(400).json({"message": "Dados incompletos ou formato incompativel"})
     } else {
       if(typeof(imagemIdimagem) == "string" && typeof(nome) == "string" && typeof(descricao) == "string") {
         try{
-          const personagemID = await prisma.personagem.findFirstOrThrow({
+          const personagemID = await prisma.personagem.findFirst({
             select: {
               idPersonagem: true
             },
@@ -81,15 +81,13 @@ module.exports = (app: Express, prisma: PrismaClient) => {
           });
 
           if (!personagemID) {
-            return response.status(404).json({ error: 'Feedback não encontrado.' });
+            return response.status(404).json({ "error": 'Personagem não encontrado.' });
           }
           return response.json(personagemID);
         }catch(error){
           //console.error('ocorreu um erro:', error);
-          return response.status(500).json({error: 'occoreu um erro ao procurar o personagem'});
+          return response.status(500).json({"error": 'ocorreu um erro ao procurar o personagem'});
         }
-      } else {
-        response.status(400).json({"message": "Formato de dados incompativel"})
       }
     }
   });
