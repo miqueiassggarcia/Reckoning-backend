@@ -68,7 +68,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     } else {
       if(typeof(atribuicao) == "string" && typeof(feedback) == "string") {
         try{
-          const feedbackID = await prisma.feedback.findFirstOrThrow({
+          const feedbackID = await prisma.feedback.findFirst({
             select: {
               idFeedback: true
             },
@@ -77,17 +77,14 @@ module.exports = (app: Express, prisma: PrismaClient) => {
               feedback: feedback
             }
           });
-
           if (!feedbackID) {
-            return response.status(404).json({ error: 'Feedback não encontrado.' });
+            return response.status(404).json({ "error": 'Feedback não encontrado.' });
           }
           return response.json(feedbackID);
         }catch(error){
           //console.error('ocorreu um erro:', error);
-          return response.status(500).json({error: 'occoreu um erro ao procurar o feedback'});
+          return response.status(500).json({"error": 'ocorreu um erro ao procurar o feedback'});
         }
-      } else {
-        response.status(400).json({"message": "Formato de dados incompativel"})
       }
     }
   });
