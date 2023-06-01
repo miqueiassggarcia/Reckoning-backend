@@ -71,7 +71,7 @@ describe("Testando versões", () => {
     it('Deve retornar status 400 se for enviado dados incorretos', async () => {
         const res = await request(app).get(`/search/versao?nome=descricao=${descricao}&data=${data}&arquivo=${arquivo}`);
         expect(res.statusCode).toBe(400);
-        expect(res.body).toHaveProperty('message', 'Dados imcompletos ou formato incompativel');
+        expect(res.body).toHaveProperty('message', 'Dados incompletos ou formato incompativel');
     });
     });
 
