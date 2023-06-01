@@ -1,4 +1,5 @@
 const request = require("supertest");
+import { number } from "zod";
 import { app, prisma } from "../server"; 
 
 const currentDateTime = new Date();
@@ -53,6 +54,24 @@ describe("Testando versões", () => {
         const res = await request(app).get(`/search/versao?nome=${nome}&descricao=${descricao}&data=${data}&arquivo=${arquivo}`)
         expect(res.statusCode).toBe(200);
         expect(res.body.idVersao).toBe(`${idVersao}`);
+    });
+    it('Deve retornar status 404 para uma versão inexistente', async () => {
+        let nomee = "Inexistente"
+        const res = await request(app).get(`/search/versao?nome=${nomee}&descricao=${descricao}&data=${data}&arquivo=${arquivo}`); 
+        expect(res.statusCode).toBe(404);
+        expect(res.body).toHaveProperty('error', 'Versão não encontrada.');
+    });
+    it('Deve retornar status 500 em caso de erro interno', async () => {
+        // Simulando um erro interno no servidor
+        jest.spyOn(prisma.versao, 'findFirst').mockRejectedValueOnce(new Error('Erro interno'));
+        const res = await request(app).get(`/search/versao?nome=${nome}&descricao=${descricao}&data=${data}&arquivo=${arquivo}`); 
+        expect(res.statusCode).toBe(500);
+        expect(res.body).toHaveProperty('error', 'ocorreu um erro ao procurar a versão');
+    });
+    it('Deve retornar status 400 se for enviado dados incorretos', async () => {
+        const res = await request(app).get(`/search/versao?nome=descricao=${descricao}&data=${data}&arquivo=${arquivo}`);
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty('message', 'Dados imcompletos ou formato incompativel');
     });
     });
 
