@@ -41,6 +41,24 @@ describe("Testando imagens", () => {
         expect(res.statusCode).toBe(200);
         expect(res.body.idImagem).toBe(`${idImagem}`);
     });
+    it('Deve retornar status 400 se for enviado dados incorretos', async () => {
+        const res = await request(app).get(`/search/imagem?imagem=${""}`)
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty('message', 'Dados não encontrados');
+    });
+    it('Deve retornar status 404 para um item inexistente', async () => {
+        let imagemm = "Inexistente"
+        const res = await request(app).get(`/search/imagem?imagem=${imagemm}`)
+        expect(res.statusCode).toBe(404);
+        expect(res.body).toHaveProperty('error', 'imagem não encontrada.');
+    });
+    it('Deve retornar status 500 em caso de erro interno', async () => {
+        // Simulando um erro interno no servidor
+        jest.spyOn(prisma.imagem, 'findFirst').mockRejectedValueOnce(new Error('Erro interno'));
+        const res = await request(app).get(`/search/imagem?imagem=${imagem}`)
+        expect(res.statusCode).toBe(500);
+        expect(res.body).toHaveProperty('error', 'ocorreu um erro ao procurar a imagem');
+    });
     });
 
 
