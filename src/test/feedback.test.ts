@@ -40,11 +40,29 @@ describe("Testando feedbacks", () => {
 
 
 describe("Testar rota para pegar id pelos dados", () => {
-  it("Deve retornar um id do feedback correspondente", async () => {
-    const res = await request(app).get(`/search/feedback?atribuicao=${atribuicao}&feedback=${feedback}`)
-    expect(res.statusCode).toBe(200);
-    expect(res.body.idFeedback).toBe(`${idFeedback}`);
-  });
+    it("Deve retornar um id do feedback correspondente", async () => {
+        const res = await request(app).get(`/search/feedback?atribuicao=${atribuicao}&feedback=${feedback}`)
+        expect(res.statusCode).toBe(200);
+        expect(res.body.idFeedback).toBe(`${idFeedback}`);
+    });
+    it('Deve retornar status 400 se for enviado dados incorretos', async () => {
+        const res = await request(app).get(`/search/feedback?atribuicao=${"fsdsgsgs"}feedback=${feedback}`)
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty('message', 'Dados não encontrados');
+    });
+    it('Deve retornar status 404 para um item inexistente', async () => {
+        let atribuicaoo = "Inexistente"
+        const res = await request(app).get(`/search/feedback?atribuicao=${atribuicaoo}&feedback=${feedback}`)
+        expect(res.statusCode).toBe(404);
+        expect(res.body).toHaveProperty('error', 'Feedback não encontrado.');
+    });
+    it('Deve retornar status 500 em caso de erro interno', async () => {
+        // Simulando um erro interno no servidor
+        jest.spyOn(prisma.feedback, 'findFirst').mockRejectedValueOnce(new Error('Erro interno'));
+        const res = await request(app).get(`/search/feedback?atribuicao=${atribuicao}&feedback=${feedback}`)
+        expect(res.statusCode).toBe(500);
+        expect(res.body).toHaveProperty('error', 'ocorreu um erro ao procurar o feedback');
+    });
 });
 
 
