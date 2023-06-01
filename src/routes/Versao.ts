@@ -69,7 +69,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
     const arquivo = request.query.arquivo;
 
     if(!nome || !descricao || !data || !arquivo) {
-      response.status(400).json({"message": "Dados imcompletos ou formato incompativel"})
+      response.status(400).json({"message": "Dados incompletos ou formato incompativel"})
     } else {
       if(typeof(nome) == "string" && typeof(descricao) == "string" && typeof(data) == "string" && typeof(arquivo) == "string") {
         try{
