@@ -64,7 +64,7 @@ app.get("/search/imagem", async (request, response) => {
   } else {
     if(typeof(imagem) == "string") {
       try{
-        const imagemID = await prisma.imagem.findFirstOrThrow({
+        const imagemID = await prisma.imagem.findFirst({
           select: {
             idImagem: true
           },
@@ -72,17 +72,14 @@ app.get("/search/imagem", async (request, response) => {
             imagem: imagem,
           }
         });
-
         if (!imagemID) {
-          return response.status(404).json({ error: 'Feedback não encontrado.' });
+          return response.status(404).json({ "error": 'imagem não encontrada.' });
         }
         return response.json(imagemID);
       }catch(error){
         //console.error('ocorreu um erro:', error);
-        return response.status(500).json({error: 'occoreu um erro ao procurar a imagem'});
+        return response.status(500).json({"error": 'ocorreu um erro ao procurar a imagem'});
       }
-    } else {
-      response.status(400).json({"message": "Formato de dados incompativel"})
     }
   }
 });
