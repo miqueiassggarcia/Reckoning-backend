@@ -18,3 +18,5 @@ require("./routes/Login")(app, prisma)
 if (process.env.NODE_ENV !== 'test') {
   app.listen(3333, () => console.log(`Listening on port ${3333}`))
 }
+
+process.env['DATABASE_URL'] = process.env.NODE_ENV !== 'test' ? 'file:../src/database/db.sqlite' : 'file:../src/database/dbTest.sqlite';
