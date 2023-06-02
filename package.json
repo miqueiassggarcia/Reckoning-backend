@@ -4,7 +4,7 @@
   "description": "Backend do site do reckoning",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --runInBand",
     "start": "tsx src/server.ts",
     "start:dev": "tsx watch src/server.ts",
     "build": "tsup src/tests src/validation src/server.ts"
