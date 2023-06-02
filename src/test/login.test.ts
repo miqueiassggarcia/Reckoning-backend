@@ -21,6 +21,49 @@ describe("Testando login", () => {
         expect(res.body.nome).toBe(`${nome}`);
         expect(res.body.email).toBe(`${email}`);
     });
+    it('Deve retornar status 400 se nada for cadastrado', async () => {
+      const res = await request(app)
+          .post('/singup')
+          .send({});
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty("error", 'dados inválidos');
+    });
+    it('Deve retornar status 500 em caso de erro interno', async () => {
+      // Simulando um erro interno no servidor
+      jest.spyOn(prisma.usuario, 'findUnique').mockRejectedValueOnce(new Error('Erro interno'));
+      const res = await request(app).post(`/singup/`).send({
+          "idUsuario": `${idUsuario}`,
+          "nome": `${nome}`,
+          "email": `${email}`,
+          "password": `${password}`
+      });
+      expect(res.statusCode).toBe(500);
+      expect(res.body).toHaveProperty("error", "ocorreu um erro ao cadastrar usuário");
+    });
+    it('Deve retornar status 409 se nada o email já existir em outro cadastro', async () => {
+      const res = await request(app)
+          .post('/singup')
+          .send({
+            "idUsuario": `${idUsuario}`,
+            "nome": `${nome}`,
+            "email": `${email}`,
+            "password": `${password}`
+          });
+      expect(res.statusCode).toBe(409);
+      expect(res.body).toHaveProperty("error", 'email já usado, não é possível criar o usuário');
+    });
+    it('Deve retornar status 500 em caso de erro interno', async () => {
+      // Simulando um erro interno no servidor
+      jest.spyOn(prisma.usuario, 'create').mockRejectedValueOnce(new Error('Erro interno'));
+      const res = await request(app).post(`/singup/`).send({
+          "idUsuario": `${idUsuario}`,
+          "nome": `${nome}`,
+          "email": `fabio${email}`,
+          "password": `${password}`
+      });
+      expect(res.statusCode).toBe(500);
+      expect(res.body).toHaveProperty("error", "ocorreu um erro ao cadastrar usuário");
+    });
   });
 
 
