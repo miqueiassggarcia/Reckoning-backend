@@ -5,7 +5,12 @@ export const app = express();
 app.use(express.json());
 
 export const prisma = new PrismaClient({
-  log: process.env.NODE_ENV !== 'test' ? ['query'] : []
+  log: process.env.NODE_ENV !== 'test' ? ['query'] : [],
+  datasources: {
+    db: {
+      url: process.env.NODE_ENV === 'test' ? 'file:../src/database/dbTest.sqlite' : 'file:../src/database/db.sqlite',
+    }
+  }
 });
 
 require("./routes/Versao")(app, prisma)
@@ -18,5 +23,3 @@ require("./routes/Login")(app, prisma)
 if (process.env.NODE_ENV !== 'test') {
   app.listen(3333, () => console.log(`Listening on port ${3333}`))
 }
-
-process.env['DATABASE_URL'] = process.env.NODE_ENV !== 'test' ? 'file:../src/database/db.sqlite' : 'file:../src/database/dbTest.sqlite';

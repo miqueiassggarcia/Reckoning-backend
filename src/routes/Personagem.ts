@@ -161,8 +161,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
             }
           });
           return response.status(200).json(personagem);
-        }
-        if(!novoPersonagem){
+        } else {
           return response.status(404).json({ "error": 'Personagem não encontrado.' });
         }
       } else {

@@ -33,19 +33,19 @@ module.exports = (app: Express, prisma: PrismaClient) => {
             return response.status(201).json(usuario)
           } catch(error) {
             //console.error("ocorreu um erro ao cadastrar usuário:", error);
-            response.status(500).json({"error": "ocorreu um erro ao cadastrar usuário"})
+            return response.status(500).json({"error": "ocorreu um erro ao cadastrar usuário"})
           }
         } else {
           //console.error("Usuário já existe")
-          response.status(409).json({"error": "email já usado, não é possível criar o usuário"})
+          return response.status(409).json({"error": "email já usado, não é possível criar o usuário"})
         }
       } catch(error) {
         //console.error("ocorreu um erro ao cadastrar usuário:", error);
-        response.status(500).json({"error": "ocorreu um erro ao cadastrar usuário"})
+        return response.status(500).json({"error": "ocorreu um erro ao cadastrar usuário"})
       }
     } catch (error) {
       //console.error("ocorreu um erro ao cadastrar usuário:", error);
-      response.status(400).json({"error": "dados inválidos"})
+      return response.status(400).json({"error": "dados inválidos"})
     }
   })
 
@@ -66,13 +66,13 @@ module.exports = (app: Express, prisma: PrismaClient) => {
       })
       
       if(!usuario) {
-        response.status(404).json({"error": "Usuário não encontrado"});
-      }
+        return response.status(404).json({"error": "usuário não encontrado"});
+      } else {}
 
-      response.json(usuario);
+      return response.json(usuario);
     } catch(error) {
       //console.error("ocorreu um erro:", error);
-      response.status(500).json({"error": "ocorreu um erro ao encontrar usuário"})
+      return response.status(500).json({"error": "ocorreu um erro ao encontrar usuário"})
     }
   })
 
@@ -97,11 +97,11 @@ module.exports = (app: Express, prisma: PrismaClient) => {
           return response.status(401).json({ "validate": false })
         }
       } else {
-        response.status(404).json({"error": "Usuário não encontrado"});
+        return response.status(404).json({"error": "Usuário não encontrado"});
       }
     } catch(error) {
       //console.error("ocorreu um erro:", error);
-      response.status(500).json({"error": "ocorreu um erro ao encontrar usuário"})
+      return response.status(500).json({"error": "ocorreu um erro ao validar usuário"})
     }
   })
 

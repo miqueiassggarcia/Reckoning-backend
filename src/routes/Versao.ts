@@ -167,8 +167,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
             }
           })
           return response.status(200).json(versao);
-        }
-        if (!versaoexiste){
+        } else {
           return response.status(404).json({ "error": 'Versão não encontrado.' });
         }
       } else {

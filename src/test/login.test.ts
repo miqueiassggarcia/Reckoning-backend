@@ -75,6 +75,18 @@ describe("Testando login", () => {
         expect(res.body.email).toBe(`${email}`);
         expect(res.body.hash).toBe(`${CryptoJS.SHA256(password).toString()}`);
     });
+    it("Deve retornar erro de usuário não encontrado", async () => {
+      const res = await request(app).get(`/usuario/${idUsuario}+a`);
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toHaveProperty("error", "usuário não encontrado");
+    });
+    it('Deve retornar status 500 em caso de erro interno', async () => {
+      // Simulando um erro interno no servidor
+      jest.spyOn(prisma.usuario, 'findUnique').mockRejectedValueOnce(new Error('Erro interno'));
+      const res = await request(app).get(`/usuario/${idUsuario}`);
+      expect(res.statusCode).toBe(500);
+      expect(res.body).toHaveProperty("error", "ocorreu um erro ao encontrar usuário");
+    });
   });
 
 
@@ -87,6 +99,32 @@ describe("Testando login", () => {
         expect(res.statusCode).toBe(200);
         expect(res.body.validate).toBe(true);
     });
+    it('Deve retornar status 500 em caso de erro interno', async () => {
+      // Simulando um erro interno no servidor
+      jest.spyOn(prisma.usuario, 'findUnique').mockRejectedValueOnce(new Error('Erro interno'));
+      const res = await request(app).post(`/singin`).send({
+        "email": `${email}`,
+        "password": `${password}`
+      });
+      expect(res.statusCode).toBe(500);
+      expect(res.body).toHaveProperty("error", "ocorreu um erro ao validar usuário");
+    });
+    it("Deve retornar que o usuário não existe", async () => {
+      const res = await request(app).post(`/singin`).send({
+        "email": `${email}fdisja`,
+        "password": `${password}`
+    });
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toHaveProperty("error", "Usuário não encontrado");
+    });
+    it("Deve retornar que o usuário não existe", async () => {
+      const res = await request(app).post(`/singin`).send({
+        "email": `${email}`,
+        "password": `${password}fdsjiafj`
+    });
+      expect(res.statusCode).toBe(401);
+      expect(res.body).toHaveProperty("validate", false);
+    });
   });
 
 
@@ -97,6 +135,18 @@ describe("Testando login", () => {
         expect(res.body.idUsuario).toBe(`${idUsuario}`);
         expect(res.body.nome).toBe(`${nome}`);
         expect(res.body.email).toBe(`${email}`);
+    });
+    it("Deve retornar que o usuário não existe", async () => {
+      const res = await request(app).delete(`/usuario/${idUsuario}`);
+      expect(res.statusCode).toBe(404);
+      expect(res.body).toHaveProperty("error", 'usuário não encontrado.');
+    });
+    it('Deve retornar status 500 em caso de erro interno', async () => {
+      // Simulando um erro interno no servidor
+      jest.spyOn(prisma.usuario, 'findUnique').mockRejectedValueOnce(new Error('Erro interno'));
+      const res = await request(app).delete(`/usuario/${idUsuario}`);
+      expect(res.statusCode).toBe(500);
+      expect(res.body).toHaveProperty("error", "ocorreu um erro ao deletar usuário");
     });
   });
 });
