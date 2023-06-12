@@ -1,8 +1,10 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client"
+import cors from "cors";
 
 export const app = express();
 app.use(express.json());
+app.use(cors());
 
 export const prisma = new PrismaClient({
   log: process.env.NODE_ENV !== 'test' ? ['query'] : [],
