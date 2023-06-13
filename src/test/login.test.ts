@@ -99,6 +99,14 @@ describe("Testando login", () => {
         expect(res.statusCode).toBe(200);
         expect(res.body.validate).toBe(true);
     });
+    it("Deve retornar status 400, dados inválidos", async () => {
+      const res = await request(app).post(`/singin`).send({
+        "email": `abcd`,
+        "password": `abcd`
+    });
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty("error", "Dados inválidos")
+  });
     it('Deve retornar status 500 em caso de erro interno', async () => {
       // Simulando um erro interno no servidor
       jest.spyOn(prisma.usuario, 'findUnique').mockRejectedValueOnce(new Error('Erro interno'));

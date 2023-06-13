@@ -78,30 +78,35 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
   // Rota para validar usuário
   app.post("/singin", async (request, response) => {
-    const { email, password } = singinSchema.parse(request.body);
-
     try {
-      const usuario = await prisma.usuario.findUnique({
-        select: {
-          hash: true
-        },
-        where: {
-          email: email
-        }
-      })
+      const { email, password } = singinSchema.parse(request.body);
+     
+      try {
 
-      if(usuario) {
-        if(usuario.hash === CryptoJS.SHA256(password).toString()) {
-          return response.json({ "validate": true })
+        const usuario = await prisma.usuario.findUnique({
+          select: {
+            hash: true
+          },
+          where: {
+            email: email
+          }
+        })
+
+        if(usuario) {
+          if(usuario.hash === CryptoJS.SHA256(password).toString()) {
+            return response.json({ "validate": true })
+          } else {
+            return response.status(401).json({ "validate": false })
+          }
         } else {
-          return response.status(401).json({ "validate": false })
+          return response.status(404).json({"error": "Usuário não encontrado"});
         }
-      } else {
-        return response.status(404).json({"error": "Usuário não encontrado"});
+      } catch(error) {
+        //console.error("ocorreu um erro:", error);
+        return response.status(500).json({"error": "ocorreu um erro ao validar usuário"})
       }
     } catch(error) {
-      //console.error("ocorreu um erro:", error);
-      return response.status(500).json({"error": "ocorreu um erro ao validar usuário"})
+      response.status(400).json({"error": "Dados inválidos"})
     }
   })
 
