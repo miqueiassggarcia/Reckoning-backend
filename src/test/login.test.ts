@@ -98,6 +98,7 @@ describe("Testando login", () => {
       });
         expect(res.statusCode).toBe(200);
         expect(res.body.validate).toBe(true);
+        expect(res.body.idUsuario).toBe(idUsuario);
     });
     it("Deve retornar status 400, dados inválidos", async () => {
       const res = await request(app).post(`/singin`).send({

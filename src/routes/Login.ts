@@ -85,6 +85,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
         const usuario = await prisma.usuario.findUnique({
           select: {
+            idUsuario: true,
             hash: true
           },
           where: {
@@ -94,7 +95,7 @@ module.exports = (app: Express, prisma: PrismaClient) => {
 
         if(usuario) {
           if(usuario.hash === CryptoJS.SHA256(password).toString()) {
-            return response.json({ "validate": true })
+            return response.json({ "validate": true, "idUsuario": usuario.idUsuario })
           } else {
             return response.status(401).json({ "validate": false })
           }
